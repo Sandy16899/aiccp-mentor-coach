@@ -769,9 +769,17 @@ function renderObsForm(){
 }
 
 function skillOpts(lvl,selected){
-  return COMP_KEYS.flatMap(ck=>SKILLS[lvl][ck].items.map(item=>
-    `<option value="${item.code}" ${selected===item.code?'selected':''}>${item.code}</option>`
-  )).join('');
+  const compNames={
+    C3:'Competency 3 – Establishes and Maintains Agreements',
+    C4:'Competency 4 – Cultivates Trust and Safety',
+    C5:'Competency 5 – Maintains Presence',
+    C6:'Competency 6 – Listens Actively',
+    C7:'Competency 7 – Evokes Awareness',
+    C8:'Competency 8 – Facilitates Client Growth'
+  };
+  return COMP_KEYS.map(ck=>
+    `<option value="${ck}" ${selected===ck?'selected':''}>${compNames[ck]}</option>`
+  ).join('');
 }
 
 function calcPCCScore(sess){
