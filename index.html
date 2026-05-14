@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AICCP MENTOR COACH</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Noto+Serif+TC:wght@300;400;600&display=swap');
+:root{
+  --navy:#1a2540;--blue:#2d5fa3;--gold:#c8973a;--gold-light:#e8b85a;
+  --cream:#f7f4ef;--cream-dark:#ede8e0;--text:#1a2540;--text-muted:#5a6480;
+  --success:#2d7a4f;--warning:#b85a1a;--border:#c8c0b0;--white:#ffffff;
+  --shadow:0 4px 24px rgba(26,37,64,.10);--shadow-lg:0 12px 48px rgba(26,37,64,.16);
+  --acc:#2d5fa3;--pcc:#7b3fa0;--mcc:#b8420a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Mono','Noto Serif TC',monospace;background:var(--cream);color:var(--text);min-height:100vh}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--navy);position:relative;overflow:hidden}
+.login-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(200,151,58,.12),transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(45,95,163,.2),transparent 50%)}
+.login-card{background:white;border-radius:8px;padding:48px 40px;width:420px;box-shadow:var(--shadow-lg);position:relative;z-index:1}
+.login-logo{text-align:center;margin-bottom:32px}
+.login-badge{display:inline-block;background:var(--gold);color:var(--navy);font-weight:600;font-size:11px;padding:5px 12px;letter-spacing:.1em;border-radius:2px;margin-bottom:12px}
+.login-title{font-family:'Crimson Pro',serif;font-size:28px;font-weight:300;color:var(--navy);line-height:1.2}
+.login-title span{color:var(--blue);font-weight:600}
+.login-sub{font-size:11px;color:var(--text-muted);margin-top:6px}
+.lf{display:flex;flex-direction:column;gap:14px}
+.lf label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:2px}
+.lf input{border:1px solid var(--border);border-radius:3px;padding:12px 14px;font-family:'DM Mono',monospace;font-size:13px;width:100%;outline:none;background:var(--cream);transition:border-color .18s}
+.lf input:focus{border-color:var(--blue);background:white}
+.login-btn{background:var(--navy);color:white;border:none;border-radius:3px;padding:14px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;width:100%;margin-top:4px;transition:background .18s}
+.login-btn:hover{background:var(--blue)}
+.login-err{background:#ffeaea;border:1px solid #f5a5a5;border-radius:3px;padding:10px 14px;font-size:12px;color:#c0392b;display:none}
+.config-notice{background:var(--cream);border:1px solid var(--border);border-radius:3px;padding:10px 14px;font-size:11px;color:var(--text-muted);margin-top:8px;line-height:1.6}
+
+/* HEADER */
+.app-header{background:var(--navy);position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.25)}
+.header-inner{max-width:1280px;margin:0 auto;padding:13px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo-badge{background:var(--gold);color:var(--navy);font-weight:600;font-size:10px;padding:4px 9px;letter-spacing:.08em;border-radius:2px}
+.logo-title{color:white;font-family:'Crimson Pro',serif;font-size:18px;font-weight:300}
+.logo-title span{color:var(--gold-light);font-weight:600}
+.nav-tabs{display:flex;gap:1px}
+.nav-tab{background:transparent;border:none;color:rgba(255,255,255,.5);padding:8px 14px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.nav-tab:hover{color:rgba(255,255,255,.85)}
+.nav-tab.active{color:var(--gold-light);border-bottom-color:var(--gold)}
+.nav-tab.hidden{display:none}
+.header-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.user-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:5px 12px;font-size:11px;color:rgba(255,255,255,.8);display:flex;align-items:center;gap:7px}
+.user-role{border-radius:10px;padding:2px 8px;font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.role-admin{background:var(--gold);color:var(--navy)}
+.role-mentor{background:rgba(255,255,255,.2);color:white}
+.logout-btn{background:transparent;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.6);padding:6px 12px;border-radius:3px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;font-family:'DM Mono',monospace;transition:all .18s}
+.logout-btn:hover{border-color:rgba(255,255,255,.6);color:white}
+
+/* LEVEL BADGES */
+.lvl{display:inline-block;padding:2px 7px;border-radius:2px;font-size:10px;font-weight:600;letter-spacing:.05em}
+.lvl-ACC{background:#dbeafe;color:var(--acc)}
+.lvl-PCC{background:#f3e8ff;color:var(--pcc)}
+.lvl-MCC{background:#fff0e8;color:var(--mcc)}
+
+/* MAIN */
+.main{max-width:1280px;margin:0 auto;padding:24px 28px}
+.view{display:none}.view.active{display:block}
+
+/* STATS */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:white;border:1px solid var(--border);border-radius:4px;padding:20px;box-shadow:var(--shadow)}
+.stat-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px}
+.stat-value{font-family:'Crimson Pro',serif;font-size:36px;font-weight:300;color:var(--navy);line-height:1}
+.stat-sub{font-size:11px;color:var(--text-muted);margin-top:4px}
+
+/* SECTION */
+.section-title{font-family:'Crimson Pro',serif;font-size:20px;font-weight:400;color:var(--navy);margin-bottom:12px;padding-bottom:9px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;background:white;box-shadow:var(--shadow);border-radius:4px;overflow:hidden}
+.data-table th{background:var(--navy);color:rgba(255,255,255,.7);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:10px 13px;text-align:left;font-weight:400}
+.data-table td{padding:12px 13px;border-bottom:1px solid var(--cream-dark);font-size:13px;vertical-align:middle}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:var(--cream)}
+
+/* PROGRESS */
+.prog-wrap{background:var(--cream-dark);border-radius:2px;height:5px;width:80px;display:inline-block;vertical-align:middle;margin-right:6px}
+.prog-fill{height:100%;border-radius:2px;background:var(--blue);transition:width .4s}
+.prog-fill.done{background:var(--success)}
+
+/* BADGES */
+.badge{display:inline-block;padding:2px 7px;border-radius:2px;font-size:10px;letter-spacing:.05em;text-transform:uppercase;font-weight:500}
+.badge-pending{background:#fff3e0;color:#b85a1a}
+.badge-progress{background:#e3f0ff;color:var(--blue)}
+.badge-ready{background:#e0f7ea;color:var(--success)}
+.badge-done{background:var(--navy);color:var(--gold-light)}
+
+/* BTNS */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:3px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;border:1px solid transparent;transition:all .18s}
+.btn-primary{background:var(--blue);color:white;border-color:var(--blue)}
+.btn-primary:hover{background:var(--navy);border-color:var(--navy)}
+.btn-gold{background:var(--gold);color:var(--navy);border-color:var(--gold);font-weight:500}
+.btn-gold:hover{background:var(--gold-light)}
+.btn-outline{background:transparent;color:var(--navy);border-color:var(--border)}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue)}
+.btn-sm{padding:4px 9px;font-size:10px}
+.btn-danger{background:#c0392b;color:white;border-color:#c0392b}
+
+/* FORM */
+.form-card{background:white;border:1px solid var(--border);border-radius:4px;padding:24px;box-shadow:var(--shadow);margin-bottom:18px}
+.form-card h3{font-family:'Crimson Pro',serif;font-size:16px;font-weight:400;color:var(--navy);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.form-card h3::before{content:'';display:inline-block;width:3px;height:15px;background:var(--gold);border-radius:2px;flex-shrink:0}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-group.full{grid-column:1/-1}
+label{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);font-weight:500}
+input[type="text"],input[type="email"],input[type="date"],select,textarea{border:1px solid var(--border);border-radius:3px;padding:8px 10px;font-family:'DM Mono',monospace;font-size:12px;color:var(--text);background:var(--cream);outline:none;width:100%;transition:border-color .18s}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);background:white}
+textarea{resize:vertical;min-height:60px}
+
+/* COMPETENCY */
+.comp-block{border:1px solid var(--border);border-radius:4px;margin-bottom:12px;overflow:hidden}
+.comp-header{color:white;padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+.comp-header.acc{background:var(--acc)}
+.comp-header.pcc{background:var(--pcc)}
+.comp-header.mcc{background:var(--mcc)}
+.comp-header.fail{background:#5a2a2a !important}
+.comp-num{font-size:9px;letter-spacing:.1em;color:rgba(255,255,255,.7);text-transform:uppercase;margin-bottom:2px}
+.comp-header h4{font-family:'Crimson Pro',serif;font-size:15px;font-weight:400}
+.comp-body{padding:16px}
+.skill-row{padding:10px 0;border-bottom:1px solid var(--cream-dark)}
+.skill-row:last-child{border-bottom:none}
+.skill-code{font-size:10px;color:var(--gold);font-weight:500;margin-bottom:2px;letter-spacing:.05em}
+.skill-label{font-size:12px;line-height:1.5}
+
+/* RATING - ACC/MCC 4-level */
+.rating-group{display:flex;gap:3px}
+.rb{width:38px;height:38px;border:2px solid var(--border);border-bottom:3px solid rgba(0,0,0,.2);border-radius:5px;background:var(--cream);font-size:14px;font-weight:700;cursor:pointer;transition:all .1s;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-family:'DM Mono',monospace;user-select:none;position:relative}
+.rb:hover{border-color:var(--blue);color:var(--blue);background:white;transform:translateY(-2px);box-shadow:0 4px 8px rgba(45,95,163,.2)}
+.rb:active{transform:translateY(1px);box-shadow:none;border-bottom-width:1px}
+.rb.s3{background:var(--success);border-color:#1d5c38;border-bottom:3px solid #0f3a22;color:white;transform:none}
+.rb.s3:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(45,122,79,.4)}
+.rb.s2{background:var(--blue);border-color:#1e4a80;border-bottom:3px solid #0f2e54;color:white;transform:none}
+.rb.s2:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(45,95,163,.4)}
+.rb.s1{background:#e0a020;border-color:#a07010;border-bottom:3px solid #6b4a08;color:white;transform:none}
+.rb.s1:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(200,140,30,.4)}
+.rb.s0{background:var(--warning);border-color:#7a2e08;border-bottom:3px solid #4a1c05;color:white;transform:none}
+.rb.s0:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(184,90,26,.4)}
+
+/* PCC Observed/Not toggle */
+.obs-group{display:flex;gap:5px}
+.obs-btn{padding:7px 13px;border:2px solid var(--border);border-bottom:3px solid rgba(0,0,0,.15);border-radius:5px;background:var(--cream);font-size:11px;font-weight:600;cursor:pointer;transition:all .1s;font-family:'DM Mono',monospace;white-space:nowrap;user-select:none}
+.obs-btn:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,.12)}
+.obs-btn:active{transform:translateY(1px);box-shadow:none;border-bottom-width:1px}
+.obs-btn.obs-yes{background:var(--success);border-color:#1d5c38;border-bottom:3px solid #0f3a22;color:white}
+.obs-btn.obs-yes:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(45,122,79,.4)}
+.obs-btn.obs-no{background:var(--warning);border-color:#7a2e08;border-bottom:3px solid #4a1c05;color:white}
+.obs-btn.obs-no:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(184,90,26,.4)}
+
+/* QUALIFIER */
+.qual-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--cream-dark)}
+.qual-row:last-child{border-bottom:none}
+.qual-label{flex:1;font-size:12px}
+.toggle-group{display:flex;gap:3px;flex-shrink:0}
+.toggle-btn{padding:5px 10px;border:1px solid var(--border);border-radius:3px;background:var(--cream);font-size:10px;cursor:pointer;transition:all .15s;font-family:'DM Mono',monospace}
+.toggle-btn.yes-active{background:var(--success);border-color:var(--success);color:white}
+.toggle-btn.no-active{background:var(--warning);border-color:var(--warning);color:white}
+
+/* SESSION CHIPS */
+.student-selector{display:flex;align-items:center;gap:10px;background:white;border:1px solid var(--border);border-radius:4px;padding:12px 20px;margin-bottom:20px;box-shadow:var(--shadow);flex-wrap:wrap}
+.session-chips{display:flex;gap:6px;flex-wrap:wrap}
+.session-chip{padding:4px 12px;border:1px solid var(--border);border-radius:20px;font-size:11px;cursor:pointer;transition:all .15s;background:white}
+.session-chip.active{background:var(--blue);color:white;border-color:var(--blue)}
+.session-chip.done{color:var(--success);border-color:var(--success)}
+.session-chip-add{padding:4px 12px;border:1px dashed var(--border);border-radius:20px;font-size:11px;cursor:pointer;color:var(--blue);background:transparent;transition:all .15s}
+.session-chip-add:hover{background:var(--blue);color:white;border-color:var(--blue);border-style:solid}
+
+/* ACTION BAR */
+.action-bar{position:sticky;bottom:0;background:var(--navy);padding:12px 28px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 -4px 24px rgba(0,0,0,.2);z-index:50}
+.action-bar-info{color:rgba(255,255,255,.6);font-size:11px;letter-spacing:.05em}
+.action-bar-btns{display:flex;gap:8px}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(26,37,64,.7);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
+.modal-overlay.open{display:flex}
+.modal{background:white;border-radius:6px;padding:28px;max-width:500px;width:92%;box-shadow:var(--shadow-lg)}
+.modal h3{font-family:'Crimson Pro',serif;font-size:20px;margin-bottom:12px;color:var(--navy)}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+
+/* PDF */
+.pdf-wrap{background:white;border-radius:6px;padding:20px;max-width:860px;width:100%;box-shadow:var(--shadow-lg)}
+.pdf-preview{font-family:'Times New Roman',serif;font-size:11px;line-height:1.6;color:#000;padding:16px}
+.pdf-preview h1{font-size:16px;text-align:center;margin-bottom:3px}
+.pdf-preview h2{font-size:13px;margin:14px 0 5px;border-bottom:1px solid #333;padding-bottom:2px}
+.pdf-preview .pdf-meta{text-align:center;font-size:10px;color:#555;margin-bottom:14px}
+.pdf-preview table{width:100%;border-collapse:collapse;margin:6px 0;font-size:10px}
+.pdf-preview th{background:#1a2540;color:white;padding:4px 8px;text-align:left}
+.pdf-preview td{padding:4px 8px;border:1px solid #ccc}
+
+/* MISC */
+.empty-state{text-align:center;padding:50px 20px;color:var(--text-muted)}
+.empty-state .icon{font-size:40px;margin-bottom:12px}
+.alert{padding:10px 13px;border-radius:3px;font-size:11px;margin-bottom:12px;border-left:3px solid;line-height:1.6}
+.alert-info{background:#e3f0ff;border-color:var(--blue);color:var(--navy)}
+.alert-warn{background:#fff3e0;border-color:var(--gold);color:#7a4800}
+.chip{display:inline-flex;align-items:center;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:2px 9px;font-size:9px;color:rgba(255,255,255,.7)}
+.toast{position:fixed;bottom:72px;right:24px;background:var(--success);color:white;padding:9px 18px;border-radius:4px;font-size:11px;z-index:999;display:none;box-shadow:var(--shadow)}
+.pcc-score-bar{background:var(--cream);border:1px solid var(--border);border-radius:4px;padding:14px 16px;margin-bottom:14px;font-size:12px}
+.pcc-score-bar strong{color:var(--pcc);font-size:18px;font-family:'Crimson Pro',serif}
+</style>
+</head>
+<body>
+
+<script>
+// ══════════════════════════════════════════
+// CONFIGURATION
+// ══════════════════════════════════════════
+const GAS_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+
+const ADMIN_EMAILS = [
+  "celeste@coaching.com.tw",
+  "sandy@teng.coaching.com.tw"  // Sandy is both admin & mentor
+];
+
+// Pre-seeded staff (will be merged into state on first load)
+const SEED_MENTORS = [
+  { id:"M_SANDY", name:"Sandy Teng, MCC", email:"sandy@coaching.com.tw", credential:"MCC" }
+];
+const SEED_ADMIN = [
+  { name:"Celeste", email:"celeste@coaching.com.tw" }
+];
+
+const IS_DEMO = GAS_URL === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+
+// ══════════════════════════════════════════
+// SKILLS DATA — ALL THREE LEVELS
+// ══════════════════════════════════════════
+const SKILLS = {
+  ACC:{
+    label:"ACC",
+    color:"acc",
+    ratingMode:"4level",   // ✗ △ ✓ ★
+    passScore:2,           // rating >= 2 counts
+    C1:{ qualifiers:[
+      {code:"Q1",text:"Coach demonstrates alignment with the ICF Code of Ethics."},
+      {code:"Q2",text:"Coach is in consistent alignment with the role of a coach."}
+    ]},
+    C3:{ min:3, items:[
+      {code:"A3.1",text:"Coach explores the client's topic with the client."},
+      {code:"A3.2",text:"Coach and client reach agreement on what the client wants to accomplish as a session outcome."},
+      {code:"A3.3",text:"Coach explores the significance of the coaching outcome to the client."},
+      {code:"A3.4",text:"Coach attends to the agreed upon agenda throughout the session."}
+    ]},
+    C4:{ min:2, items:[
+      {code:"A4.1",text:"Coach acknowledges the client's work in the session."},
+      {code:"A4.2",text:"Coach expresses respect, support, or concern for the client."},
+      {code:"A4.3",text:"Coach supports the client's expression of feelings, perceptions, concerns, or beliefs."}
+    ]},
+    C5:{ min:3, items:[
+      {code:"A5.1",text:"Coach is observant and responsive to the client."},
+      {code:"A5.2",text:"Coach demonstrates curiosity about the client, or their agenda, or both."},
+      {code:"A5.3",text:"Coach provides space for the client to lead during the session."},
+      {code:"A5.4",text:"Coach is silent to allow time for the client to reflect."}
+    ]},
+    C6:{ min:2, items:[
+      {code:"A6.1",text:"Coach listens by recognizing feelings, perceptions, challenges, or beliefs."},
+      {code:"A6.2",text:"Coach inquires about, explores, or includes the client's use of language."},
+      {code:"A6.3",text:"Coach summarizes or paraphrases what the client communicates to confirm the coach's understanding."}
+    ]},
+    C7:{ min:2, items:[
+      {code:"A7.1",text:"Coach supports the client in viewing the situation from different perspectives."},
+      {code:"A7.2",text:"Coach inquires about the client's feelings, perceptions, behaviors, or beliefs."},
+      {code:"A7.3",text:"Coach asks clear, open-ended questions, one at a time."}
+    ]},
+    C8:{ min:2, items:[
+      {code:"A8.1",text:"Coach asks questions about what the client has learned during the session."},
+      {code:"A8.2",text:"Coach supports the client to use their learning to plan next steps."},
+      {code:"A8.3",text:"Coach supports the client to close the session."}
+    ]}
+  },
+
+  PCC:{
+    label:"PCC",
+    color:"pcc",
+    ratingMode:"observed",  // Observed / Not Observed
+    // PCC pass rule: total markers ≥23 AND each domain minimum
+    pccDomainMin:{C3:2,C4:2,C5:2,C6:3,C7:4,C8:3},
+    pccTotalMin:23,
+    // C2 markers (double-counted): 4.1,4.3,4.4,5.1,5.2,5.3,5.4,6.1,6.5,7.1,7.5
+    pccC2markers:["4.1","4.3","4.4","5.1","5.2","5.3","5.4","6.1","6.5","7.1","7.5"],
+    C1:{ qualifiers:[
+      {code:"Q1",text:"Coach demonstrates alignment with the ICF Code of Ethics."},
+      {code:"Q2",text:"Coach is in consistent alignment with the role of a coach."}
+    ]},
+    C3:{ min:2, items:[
+      {code:"3.1",text:"Coach partners with the client to identify or reconfirm what the client wants to accomplish in this session."},
+      {code:"3.2",text:"Coach partners with the client to define or reconfirm measure(s) of success for what the client wants to accomplish in this session."},
+      {code:"3.3",text:"Coach inquires about or explores what is important or meaningful to the client about what they want to accomplish in this session."},
+      {code:"3.4",text:"Coach partners with the client to define what the client believes they need to address to achieve what they want to accomplish in this session."}
+    ]},
+    C4:{ min:2, items:[
+      {code:"4.1",text:"Coach acknowledges and respects the client's unique talents, insights and work in the coaching process."},
+      {code:"4.2",text:"Coach shows support, empathy or concern for the client."},
+      {code:"4.3",text:"Coach acknowledges and supports the client's expression of feelings, perceptions, concerns, beliefs or suggestions."},
+      {code:"4.4",text:"Coach partners with the client by inviting the client to respond in any way to the coach's contributions and accepts the client's response."}
+    ]},
+    C5:{ min:2, items:[
+      {code:"5.1",text:"Coach acts in response to the whole person of the client (the who)."},
+      {code:"5.2",text:"Coach acts in response to what the client wants to accomplish throughout this session (the what)."},
+      {code:"5.3",text:"Coach partners with the client by supporting the client to choose what happens in this session."},
+      {code:"5.4",text:"Coach demonstrates curiosity to learn more about the client."},
+      {code:"5.5",text:"Coach allows for silence, pause or reflection."}
+    ]},
+    C6:{ min:3, items:[
+      {code:"6.1",text:"Coach's questions and observations are customized by using what the coach has learned about who the client is or the client's situation."},
+      {code:"6.2",text:"Coach inquires about or explores the words the client uses."},
+      {code:"6.3",text:"Coach inquires about or explores the client's emotions."},
+      {code:"6.4",text:"Coach explores the client's energy shifts, nonverbal cues or other behaviors."},
+      {code:"6.5",text:"Coach inquires about or explores how the client currently perceives themself or their world."},
+      {code:"6.6",text:"Coach allows the client to complete speaking without interrupting unless there is a stated coaching purpose to do so."},
+      {code:"6.7",text:"Coach succinctly reflects or summarizes what the client communicated to ensure the client's clarity and understanding."}
+    ]},
+    C7:{ min:4, items:[
+      {code:"7.1",text:"Coach asks questions about the client, such as their current way of thinking, feeling, values, needs, wants, beliefs or behavior."},
+      {code:"7.2",text:"Coach asks questions to help the client explore beyond the client's current thinking or feeling to new or expanded ways of thinking or feeling about themself (the who)."},
+      {code:"7.3",text:"Coach asks questions to help the client explore beyond the client's current thinking or feeling to new or expanded ways of thinking or feeling about their situation (the what)."},
+      {code:"7.4",text:"Coach asks questions to help the client explore beyond current thinking, feeling or behaving toward the outcome the client desires."},
+      {code:"7.5",text:"Coach shares – with no attachment – observations, intuitions, comments, thoughts or feelings, and invites the client's exploration through verbal or tonal invitation."},
+      {code:"7.6",text:"Coach asks clear, direct, primarily open-ended questions, one at a time, at a pace that allows for thinking, feeling or reflection by the client."},
+      {code:"7.7",text:"Coach uses language that is generally clear and concise."},
+      {code:"7.8",text:"Coach allows the client to do most of the talking."}
+    ]},
+    C8:{ min:3, items:[
+      {code:"8.1",text:"Coach invites or allows the client to explore progress toward what the client wanted to accomplish in this session."},
+      {code:"8.2",text:"Coach invites the client to state or explore the client's learning in this session about themself (the who)."},
+      {code:"8.3",text:"Coach invites the client to state or explore the client's learning in this session about their situation (the what)."},
+      {code:"8.4",text:"Coach invites the client to consider how they will use new learning from this coaching session."},
+      {code:"8.5",text:"Coach partners with the client to design post-session thinking, reflection or action."},
+      {code:"8.6",text:"Coach partners with the client to consider how to move forward, including resources, support or potential barriers."},
+      {code:"8.7",text:"Coach partners with the client to design the best methods of accountability for themself."},
+      {code:"8.8",text:"Coach celebrates the client's progress and learning."},
+      {code:"8.9",text:"Coach partners with the client on how they want to complete this session."}
+    ]}
+  },
+
+  MCC:{
+    label:"MCC",
+    color:"mcc",
+    ratingMode:"4level",
+    passScore:2,
+    C1:{ qualifiers:[
+      {code:"Q1",text:"Coach demonstrates alignment with the ICF Code of Ethics."},
+      {code:"Q2",text:"Coach is in consistent alignment with the role of a coach."}
+    ]},
+    C3:{ min:3, items:[
+      {code:"M3.1",text:"Coach partners with the client to identify the focus of the session."},
+      {code:"M3.2",text:"Coach explores and clarifies several aspects of the topic."},
+      {code:"M3.3",text:"Coach confirms the mutual understanding of the client's desired session outcome."},
+      {code:"M3.4",text:"Coach notices possible shifts emerging in the conversation and clarifies the desired direction of the session with the client."}
+    ]},
+    C4:{ min:3, items:[
+      {code:"M4.1",text:"Coach acknowledges the client's learning or growth at any moment in the session."},
+      {code:"M4.2",text:"Coach recognizes the client's emotions, strengths, or other unique characteristics."},
+      {code:"M4.3",text:"Coach seeks to understand the client by inviting the client to share more about themselves, their perspectives, or their identity."},
+      {code:"M4.4",text:"Coach demonstrates empathy for what the client has expressed."}
+    ]},
+    C5:{ min:3, items:[
+      {code:"M5.1",text:"Coach responds holistically to the client in a manner that keeps the conversation flowing."},
+      {code:"M5.2",text:"Coach partners with the client in ways that support the client needs."},
+      {code:"M5.3",text:"Coach consistently demonstrates curiosity."},
+      {code:"M5.4",text:"Coach creates space for silence, pause, or reflection."}
+    ]},
+    C6:{ min:2, items:[
+      {code:"M6.1",text:"Coach recognizes the nuances of language, emotions, energy, or behaviors in relation to the client and the client's agenda."},
+      {code:"M6.2",text:"Coach's response demonstrates understanding of the client's thinking, feeling, or insight in the moment."},
+      {code:"M6.3",text:"Coach explores what the client communicates in relation to multiple dimensions of the client."}
+    ]},
+    C7:{ min:2, items:[
+      {code:"M7.1",text:"Coach partners with the client to explore and expand the client's perspective."},
+      {code:"M7.2",text:"Coach shares insights, sensations, or observations that support the client in creating new or expanded awareness."},
+      {code:"M7.3",text:"Coach stimulates new client insights with succinct, open-ended questions, one at a time."}
+    ]},
+    C8:{ min:2, items:[
+      {code:"M8.1",text:"Coach invites the client to reflect on what they have learned about themselves from the coaching conversation."},
+      {code:"M8.2",text:"Coach partners with the client to translate insights or learning into actions."},
+      {code:"M8.3",text:"Coach partners with the client to complete the session."}
+    ]}
+  }
+};
+
+const COMP_KEYS=["C3","C4","C5","C6","C7","C8"];
+const RATING_LABELS=["不符標準","低於標準","符合標準","超越標準"];
+const RATING_SHORT=["✗","△","✓","★"];
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let currentUser=null;
+let state={mentors:[],students:[],sessions:{},reviews:{}};
+
+function saveLocal(){localStorage.setItem('aiccp_v2',JSON.stringify(state));}
+function loadLocal(){
+  const raw=localStorage.getItem('aiccp_v2');
+  if(raw){try{state=JSON.parse(raw);}catch(e){}}
+  // Seed Sandy if not present
+  if(!state.mentors.find(m=>m.email==='sandy@coaching.com.tw')){
+    state.mentors.push({id:'M_SANDY',name:'Sandy Teng, MCC',email:'sandy@coaching.com.tw',credential:'MCC'});
+    saveLocal();
+  }
+}
+loadLocal();
+
+async function apiCall(action,payload={}){
+  if(IS_DEMO)return{ok:true};
+  try{
+    const res=await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,...payload})});
+    return await res.json();
+  }catch(e){return{ok:false,error:e.message};}
+}
+async function loadRemote(){
+  if(IS_DEMO)return;
+  const res=await apiCall('getAll');
+  if(res.ok&&res.data){state=res.data;saveLocal();}
+}
+async function pushData(){
+  saveLocal();
+  if(!IS_DEMO)await apiCall('saveAll',{data:state});
+}
+
+// ══════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════
+async function doLogin(){
+  const email=document.getElementById('login-email').value.trim().toLowerCase();
+  if(!email||!email.includes('@')){showErr('請輸入有效的 Email');return;}
+  document.getElementById('login-err').style.display='none';
+  if(!IS_DEMO)await loadRemote();
+  const isAdmin=ADMIN_EMAILS.map(e=>e.toLowerCase()).includes(email);
+  const isMentor=state.mentors.some(m=>m.email.toLowerCase()===email);
+  if(!IS_DEMO&&!isAdmin&&!isMentor){showErr('此 Email 未登記，請聯繫行政。');return;}
+  const mentor=state.mentors.find(m=>m.email.toLowerCase()===email);
+  currentUser={email,isAdmin,mentorId:mentor?.id,mentorName:mentor?.name};
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app-screen').style.display='block';
+  document.getElementById('hdr-email').textContent=mentor?.name||email;
+  const roleEl=document.getElementById('hdr-role');
+  roleEl.textContent=isAdmin?'行政':'督導';
+  roleEl.className='user-role '+(isAdmin?'role-admin':'role-mentor');
+  if(isAdmin)document.getElementById('tab-admin').classList.remove('hidden');
+
+  // 只有 Sandy (MCC) 才能看到 MCC 等級選項
+  const isSandy = email === 'sandy@coaching.com.tw';
+  if(isSandy){
+    ['ns-level','nm-cred'].forEach(id=>{
+      const sel=document.getElementById(id);
+      if(sel && !sel.querySelector('option[value="MCC"]')){
+        const opt=document.createElement('option');
+        opt.value='MCC'; opt.textContent='MCC';
+        sel.appendChild(opt);
+      }
+    });
+  }
+  populateSelects();renderDashboard();
+}
+function showErr(msg){const e=document.getElementById('login-err');e.textContent=msg;e.style.display='block';}
+function doLogout(){
+  currentUser=null;
+  document.getElementById('app-screen').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+}
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+function switchView(v){
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  const idx=['dashboard','observation','review','admin'].indexOf(v);
+  document.querySelectorAll('.nav-tab')[idx]?.classList.add('active');
+  if(v==='dashboard')renderDashboard();
+  if(v==='observation')populateSelects();
+  if(v==='review')populateSelects();
+  if(v==='admin')renderAdmin();
+}
+
+// ══════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════
+function myStudents(){
+  if(!currentUser)return[];
+  if(currentUser.isAdmin)return state.students;
+  return state.students.filter(s=>s.mentorId===currentUser.mentorId);
+}
+function mentorName(id){const m=state.mentors.find(m=>m.id===id);return m?m.name:'—';}
+function mentorObj(id){return state.mentors.find(m=>m.id===id)||{name:'',email:''};}
+function doneSessions(sid){return Object.values(state.sessions[sid]||{}).filter(s=>s.done);}
+function lvlColor(lvl){return lvl==='ACC'?'acc':lvl==='PCC'?'pcc':'mcc';}
+
+// ══════════════════════════════════════════
+// POPULATE SELECTS
+// ══════════════════════════════════════════
+function populateSelects(){
+  const students=myStudents();
+  ['obs-sel','rev-sel'].forEach(id=>{
+    const sel=document.getElementById(id);
+    const cur=sel?.value;
+    if(!sel)return;
+    sel.innerHTML='<option value="">— 請選擇 —</option>'+
+      students.map(s=>`<option value="${s.id}">[${s.level}] ${s.name} (${mentorName(s.mentorId)})</option>`).join('');
+    if(cur)sel.value=cur;
+  });
+  const msel=document.getElementById('ns-mentor');
+  if(msel)msel.innerHTML='<option value="">— 選擇督導 —</option>'+
+    state.mentors.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');
+}
+
+// ══════════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════════
+function renderDashboard(){
+  if(!currentUser)return;
+  const students=myStudents();
+  const q=(document.getElementById('dash-search')?.value||'').toLowerCase();
+  let totalDone=0,pendingRev=0;
+  students.forEach(s=>{
+    const d=doneSessions(s.id).length;
+    totalDone+=d;
+    if(d>=3&&!state.reviews[s.id]?.complete)pendingRev++;
+  });
+  document.getElementById('stat-students').textContent=students.length;
+  document.getElementById('stat-sessions').textContent=totalDone;
+  document.getElementById('stat-pending').textContent=pendingRev;
+  const accCount=students.filter(s=>s.level==='ACC').length;
+  const pccCount=students.filter(s=>s.level==='PCC').length;
+  const mccCount=students.filter(s=>s.level==='MCC').length;
+  document.getElementById('stat-levels').innerHTML=`<span class="lvl lvl-ACC">${accCount} ACC</span> <span class="lvl lvl-PCC">${pccCount} PCC</span> <span class="lvl lvl-MCC">${mccCount} MCC</span>`;
+
+  const tbody=document.getElementById('dash-tbody');
+  const filtered=students.filter(s=>!q||s.name.toLowerCase().includes(q)||mentorName(s.mentorId).toLowerCase().includes(q)||s.level.toLowerCase().includes(q));
+  if(!filtered.length){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text-muted)">找不到符合的學員</td></tr>';return;}
+  tbody.innerHTML=filtered.map(s=>{
+    const done=doneSessions(s.id).length;
+    const pct=Math.min(100,Math.round((done/3)*100));
+    const revDone=state.reviews[s.id]?.complete;
+    let badge='<span class="badge badge-pending">等待觀察</span>';
+    if(done>0&&done<3)badge='<span class="badge badge-progress">觀察中</span>';
+    if(done>=3&&!revDone)badge='<span class="badge badge-ready">待總評</span>';
+    if(revDone)badge='<span class="badge badge-done">✓ 完成</span>';
+    return `<tr>
+      <td><strong>${s.name}</strong><br><span style="font-size:10px;color:var(--text-muted)">${s.email||''}</span></td>
+      <td><span class="lvl lvl-${s.level}">${s.level}</span></td>
+      <td>${mentorName(s.mentorId)}</td>
+      <td>${done} 場</td>
+      <td><div class="prog-wrap"><div class="prog-fill ${done>=3?'done':''}" style="width:${pct}%"></div></div><span style="font-size:10px">${pct}%</span></td>
+      <td>${badge}</td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="goObs('${s.id}')">觀察表單</button>
+        ${done>=3?`<button class="btn btn-primary btn-sm" style="margin-left:4px" onclick="goRev('${s.id}')">技能總評</button>`:''}
+      </td>
+    </tr>`;
+  }).join('');
+}
+function goObs(id){switchView('observation');document.getElementById('obs-sel').value=id;onObsStudentChange();}
+function goRev(id){switchView('review');document.getElementById('rev-sel').value=id;onRevStudentChange();}
+
+// ══════════════════════════════════════════
+// ADMIN
+// ══════════════════════════════════════════
+function renderAdmin(){
+  const mtbody=document.getElementById('mentors-tbody');
+  mtbody.innerHTML=state.mentors.length?state.mentors.map(m=>{
+    const cnt=state.students.filter(s=>s.mentorId===m.id).length;
+    return `<tr><td><strong>${m.name}</strong></td><td>${m.email}</td><td><span class="lvl lvl-${m.credential||'ACC'}">${m.credential||'—'}</span></td><td>${cnt}</td><td><button class="btn btn-danger btn-sm" onclick="delMentor('${m.id}')">刪除</button></td></tr>`;
+  }).join(''):'<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-muted)">尚無督導</td></tr>';
+
+  const stbody=document.getElementById('admin-stu-tbody');
+  stbody.innerHTML=state.students.length?state.students.map(s=>`<tr>
+    <td><strong>${s.name}</strong></td>
+    <td><span class="lvl lvl-${s.level}">${s.level}</span></td>
+    <td>${mentorName(s.mentorId)}</td>
+    <td>${s.enrollDate||'—'}</td>
+    <td><button class="btn btn-danger btn-sm" onclick="delStudent('${s.id}')">刪除</button></td>
+  </tr>`).join(''):'<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-muted)">尚無學員</td></tr>';
+  populateSelects();
+}
+function addMentor(){
+  const email=document.getElementById('nm-email').value.trim().toLowerCase();
+  const name=document.getElementById('nm-name').value.trim();
+  const cred=document.getElementById('nm-cred').value;
+  if(!email||!name){alert('請填寫姓名和 Email');return;}
+  if(state.mentors.some(m=>m.email===email)){alert('此 Email 已存在');return;}
+  state.mentors.push({id:'M'+Date.now(),name,email,credential:cred});
+  pushData();renderAdmin();
+  document.getElementById('nm-email').value='';document.getElementById('nm-name').value='';
+}
+function delMentor(id){if(!confirm('確定刪除此督導？'))return;state.mentors=state.mentors.filter(m=>m.id!==id);pushData();renderAdmin();}
+function addStudent(){
+  const name=document.getElementById('ns-name').value.trim();
+  const mentorId=document.getElementById('ns-mentor').value;
+  const level=document.getElementById('ns-level').value;
+  if(!name||!mentorId||!level){alert('請填寫學員姓名、督導和等級');return;}
+  const s={id:'ST'+Date.now(),name,email:document.getElementById('ns-email').value.trim(),mentorId,level,enrollDate:document.getElementById('ns-date').value};
+  state.students.push(s);
+  state.sessions[s.id]={};
+  state.reviews[s.id]={strengthItems:[{},{},{}],devItems:[{},{},{}],meta:{},complete:false};
+  pushData();closeModal('modal-add-student');renderAdmin();renderDashboard();
+  ['ns-name','ns-email','ns-date'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ns-mentor').value='';document.getElementById('ns-level').value='ACC';
+}
+function delStudent(id){if(!confirm('確定刪除此學員？'))return;state.students=state.students.filter(s=>s.id!==id);delete state.sessions[id];delete state.reviews[id];pushData();renderAdmin();renderDashboard();}
+
+// ══════════════════════════════════════════
+// OBSERVATION FORM
+// ══════════════════════════════════════════
+let curSid=null,curSKey=null;
+
+function onObsStudentChange(){
+  curSid=document.getElementById('obs-sel').value;curSKey=null;
+  renderSessChips();
+  document.getElementById('obs-form-area').innerHTML='<div class="empty-state"><div class="icon">📝</div><p>請選擇場次或新增場次</p></div>';
+  document.getElementById('obs-action-bar').style.display='none';
+}
+function renderSessChips(){
+  const chips=document.getElementById('obs-chips');
+  if(!curSid){chips.innerHTML='';return;}
+  const keys=Object.keys(state.sessions[curSid]||{}).sort();
+  chips.innerHTML=keys.map((k,i)=>{
+    const s=state.sessions[curSid][k];
+    return `<div class="session-chip ${s.done?'done':''} ${k===curSKey?'active':''}" onclick="selSess('${k}')">S${i+1}${s.done?' ✓':''}</div>`;
+  }).join('');
+}
+function addNewSession(){
+  if(!curSid){alert('請先選擇學員');return;}
+  const key='S'+Date.now();
+  const student=state.students.find(s=>s.id===curSid);
+  const lvl=student?.level||'ACC';
+  state.sessions[curSid][key]={
+    level:lvl,ratings:{},evidence:{},qualifiers:{Q1:null,Q2:null},
+    strengthCompetencies:['','',''],devCompetencies:['','',''],
+    strengthComments:['','',''],devComments:['','',''],
+    meta:{sessionDate:'',mentorSessionDate:'',modality:'virtual',duration:'60',peerClient:'',issue:''},
+    done:false
+  };
+  pushData();selSess(key);renderSessChips();
+}
+function selSess(key){curSKey=key;renderSessChips();renderObsForm();document.getElementById('obs-action-bar').style.display='flex';}
+
+function renderObsForm(){
+  if(!curSid||!curSKey)return;
+  const student=state.students.find(s=>s.id===curSid);
+  const sess=state.sessions[curSid][curSKey];
+  const lvl=sess.level||student?.level||'ACC';
+  const sk=SKILLS[lvl];
+  const mentor=mentorObj(student.mentorId);
+  const keys=Object.keys(state.sessions[curSid]).sort();
+  const num=keys.indexOf(curSKey)+1;
+  document.getElementById('obs-action-info').textContent=`${student.name} · [${lvl}] Session ${num}`;
+
+  let html=``;
+  if(lvl==='PCC'){
+    const score=calcPCCScore(sess);
+    html+=`<div class="pcc-score-bar">PCC Markers 即時統計 &nbsp;|&nbsp; 總計：<strong>${score.total}</strong> / 需 ${sk.pccTotalMin} &nbsp;|&nbsp; C2 相關：${score.c2} &nbsp;|&nbsp;
+    ${COMP_KEYS.map(ck=>`${ck}:${score[ck]||0}/${sk[ck].min}`).join(' &nbsp; ')}
+    &nbsp;|&nbsp; ${score.pass?'<span style="color:var(--success)">✓ 目前達標</span>':'<span style="color:var(--warning)">✗ 尚未達標</span>'}</div>`;
+  } else {
+    html+=`<div class="alert alert-info">評分：<strong>✗</strong> 不符 &nbsp;|&nbsp; <strong>△</strong> 低於標準 &nbsp;|&nbsp; <strong>✓</strong> 符合標準 &nbsp;|&nbsp; <strong>★</strong> 超越標準</div>`;
+  }
+
+  html+=`<div class="form-card"><h3>行政資訊</h3><div class="form-grid">
+    <div class="form-group"><label>督導姓名</label><input type="text" value="${mentor.name}" disabled></div>
+    <div class="form-group"><label>督導 Email</label><input type="text" value="${mentor.email}" disabled></div>
+    <div class="form-group"><label>學員姓名</label><input type="text" value="${student.name}" disabled></div>
+    <div class="form-group"><label>學員 Email</label><input type="text" value="${student.email||''}" disabled></div>
+    <div class="form-group"><label>等級</label><input type="text" value="${lvl}" disabled></div>
+    <div class="form-group"><label>場次</label><input type="text" value="Session ${num}" disabled></div>
+    <div class="form-group"><label>學員教練會談日期</label><input type="date" value="${sess.meta.sessionDate||''}" onchange="updMeta('sessionDate',this.value)"></div>
+    <div class="form-group"><label>督導回饋日期</label><input type="date" value="${sess.meta.mentorSessionDate||''}" onchange="updMeta('mentorSessionDate',this.value)"></div>
+    <div class="form-group"><label>觀察方式</label>
+      <select onchange="updMeta('modality',this.value)">
+        <option value="virtual" ${sess.meta.modality==='virtual'?'selected':''}>Virtual 線上</option>
+        <option value="in-person" ${sess.meta.modality==='in-person'?'selected':''}>In-person 面對面</option>
+        <option value="recorded" ${sess.meta.modality==='recorded'?'selected':''}>Recorded 錄音/影</option>
+      </select>
+    </div>
+    <div class="form-group"><label>時長（分鐘）</label><input type="text" value="${sess.meta.duration||'60'}" onchange="updMeta('duration',this.value)"></div>
+    <div class="form-group"><label>模擬客戶</label><input type="text" value="${sess.meta.peerClient||''}" placeholder="e.g. Michael" onchange="updMeta('peerClient',this.value)"></div>
+    <div class="form-group"><label>會談議題</label><input type="text" value="${sess.meta.issue||''}" placeholder="e.g. 如何做一個更好的決定" onchange="updMeta('issue',this.value)"></div>
+  </div></div>`;
+
+  // C1
+  html+=`<div class="comp-block">
+    <div class="comp-header ${lvlColor(lvl)}"><div><div class="comp-num">Competency 1</div><h4>Demonstrates Ethical Practice</h4></div></div>
+    <div class="comp-body">
+      ${sk.C1.qualifiers.map(q=>`<div class="qual-row">
+        <div class="qual-label"><strong>${q.code}.</strong> ${q.text}</div>
+        <div class="toggle-group">
+          <button class="toggle-btn ${sess.qualifiers[q.code]===true?'yes-active':''}" onclick="setQual('${q.code}',true)">✓ Observed</button>
+          <button class="toggle-btn ${sess.qualifiers[q.code]===false?'no-active':''}" onclick="setQual('${q.code}',false)">✗ Not Observed</button>
+        </div>
+      </div>`).join('')}
+      <div class="form-group" style="margin-top:10px"><label>備註</label>
+        <textarea onchange="updEv('C1',this.value)">${sess.evidence['C1']||''}</textarea>
+      </div>
+    </div>
+  </div>`;
+
+  // C3–C8
+  COMP_KEYS.forEach(ck=>{
+    const comp=sk[ck]; const cNum=ck.replace('C','');
+    html+=`<div class="comp-block">
+      <div class="comp-header ${lvlColor(lvl)}">
+        <div><div class="comp-num">Competency ${cNum}</div><h4>${['','','Establishes and Maintains Agreements','Cultivates Trust and Safety','Maintains Presence','Listens Actively','Evokes Awareness','Facilitates Client Growth'][cNum]}</h4></div>
+        <span class="chip">至少 ${comp.min} 項達標</span>
+      </div>
+      <div class="comp-body">
+        ${comp.items.map(item=>{
+          if(lvl==='PCC'){
+            const obs=sess.ratings[item.code];
+            return `<div class="skill-row">
+              <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;margin-bottom:6px">
+                <div><div class="skill-code">${item.code}</div><div class="skill-label">${item.text}</div></div>
+                <div class="obs-group" data-code="${item.code}">
+                  <button class="obs-btn ${obs===true?'obs-yes':''}" data-val="true" onclick="setRating('${item.code}',true)">✓ Observed</button>
+                  <button class="obs-btn ${obs===false?'obs-no':''}" data-val="false" onclick="setRating('${item.code}',false)">✗ Not Observed</button>
+                </div>
+              </div>
+              <textarea style="width:100%;font-size:11px;padding:6px;border:1px solid var(--border);border-radius:3px;font-family:inherit;background:var(--cream);min-height:50px;resize:vertical"
+                placeholder="佐證（時間戳記、引述…）" onchange="updEv('${item.code}',this.value)">${sess.evidence[item.code]||''}</textarea>
+            </div>`;
+          } else {
+            const r=sess.ratings[item.code];
+            return `<div class="skill-row">
+              <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;margin-bottom:6px">
+                <div><div class="skill-code">${item.code}</div><div class="skill-label">${item.text}</div></div>
+                <div class="rating-group" data-code="${item.code}">
+                  ${[0,1,2,3].map(rv=>`<button class="rb ${r===rv?'s'+rv:''}" data-val="${rv}" title="${RATING_LABELS[rv]}" onclick="setRating('${item.code}',${rv})">${RATING_SHORT[rv]}</button>`).join('')}
+                </div>
+              </div>
+              <textarea style="width:100%;font-size:11px;padding:6px;border:1px solid var(--border);border-radius:3px;font-family:inherit;background:var(--cream);min-height:50px;resize:vertical"
+                placeholder="佐證（時間戳記、引述…）" onchange="updEv('${item.code}',this.value)">${sess.evidence[item.code]||''}</textarea>
+            </div>`;
+          }
+        }).join('')}
+      </div>
+    </div>`;
+  });
+
+  // Feedback
+  html+=`<div class="form-card"><h3>觀察回饋</h3>
+    <div style="margin-bottom:16px">
+      <label style="font-size:11px;font-weight:600;color:var(--success);display:block;margin-bottom:8px">▲ 優勢 Areas of Strength</label>
+      ${[0,1,2].map(i=>`<div style="display:grid;grid-template-columns:160px 1fr;gap:7px;margin-bottom:7px;align-items:start">
+        <select onchange="updFB('s',${i},'c',this.value)" style="font-size:11px"><option value="">— 選擇技能 —</option>${skillOpts(lvl,sess.strengthCompetencies?.[i]||'')}</select>
+        <textarea style="font-size:11px;padding:6px;border:1px solid var(--border);border-radius:3px;font-family:inherit;background:var(--cream);min-height:50px"
+          placeholder="回饋內容（含佐證）" onchange="updFB('s',${i},'t',this.value)">${sess.strengthComments?.[i]||''}</textarea>
+      </div>`).join('')}
+    </div>
+    <div>
+      <label style="font-size:11px;font-weight:600;color:var(--warning);display:block;margin-bottom:8px">▼ 待發展 Areas for Development</label>
+      ${[0,1,2].map(i=>`<div style="display:grid;grid-template-columns:160px 1fr;gap:7px;margin-bottom:7px;align-items:start">
+        <select onchange="updFB('d',${i},'c',this.value)" style="font-size:11px"><option value="">— 選擇技能 —</option>${skillOpts(lvl,sess.devCompetencies?.[i]||'')}</select>
+        <textarea style="font-size:11px;padding:6px;border:1px solid var(--border);border-radius:3px;font-family:inherit;background:var(--cream);min-height:50px"
+          placeholder="回饋內容（含佐證）" onchange="updFB('d',${i},'t',this.value)">${sess.devComments?.[i]||''}</textarea>
+      </div>`).join('')}
+    </div>
+  </div>`;
+
+  document.getElementById('obs-form-area').innerHTML=html;
+}
+
+function skillOpts(lvl,selected){
+  return COMP_KEYS.flatMap(ck=>SKILLS[lvl][ck].items.map(item=>
+    `<option value="${item.code}" ${selected===item.code?'selected':''}>${item.code}</option>`
+  )).join('');
+}
+
+function calcPCCScore(sess){
+  const sk=SKILLS.PCC;
+  const score={total:0,c2:0,pass:false};
+  COMP_KEYS.forEach(ck=>{
+    let cnt=0;
+    sk[ck].items.forEach(item=>{
+      if(sess.ratings[item.code]===true){
+        cnt++;
+        // check if C2 marker
+        const bareCode=item.code.toString();
+        if(sk.pccC2markers.includes(bareCode)){score.c2++;}
+        else{score.total++;}
+      }
+    });
+    score[ck]=cnt;
+  });
+  const domainOk=COMP_KEYS.every(ck=>score[ck]>=(sk.pccDomainMin[ck]||0));
+  score.pass=score.total>=sk.pccTotalMin&&domainOk&&sess.qualifiers.Q1!==false&&sess.qualifiers.Q2!==false;
+  return score;
+}
+
+function updMeta(f,v){if(!curSid||!curSKey)return;state.sessions[curSid][curSKey].meta[f]=v;pushData();}
+function setQual(code,v){if(!curSid||!curSKey)return;state.sessions[curSid][curSKey].qualifiers[code]=v;pushData();renderObsForm();}
+function setRating(code,v){
+  if(!curSid||!curSKey)return;
+  state.sessions[curSid][curSKey].ratings[code]=v;
+  pushData();
+
+  const student=state.students.find(s=>s.id===curSid);
+  const sess=state.sessions[curSid][curSKey];
+  const lvl=sess.level||student?.level||'ACC';
+
+  if(lvl==='PCC'){
+    // PCC: update obs-btn classes for this code
+    const group=document.querySelector(`.obs-group[data-code="${code}"]`);
+    if(group){
+      group.querySelectorAll('.obs-btn').forEach(btn=>{
+        btn.classList.remove('obs-yes','obs-no');
+      });
+      if(v===true) group.querySelector('[data-val="true"]')?.classList.add('obs-yes');
+      if(v===false) group.querySelector('[data-val="false"]')?.classList.add('obs-no');
+    }
+    // Update PCC score bar
+    const score=calcPCCScore(sess);
+    const bar=document.querySelector('.pcc-score-bar');
+    if(bar)bar.innerHTML=`PCC Markers 即時統計 &nbsp;|&nbsp; 總計：<strong>${score.total}</strong> / 需 ${SKILLS.PCC.pccTotalMin} &nbsp;|&nbsp; C2 相關：${score.c2} &nbsp;|&nbsp;
+    ${COMP_KEYS.map(ck=>`${ck}:${score[ck]||0}/${SKILLS.PCC[ck].min}`).join(' &nbsp; ')}
+    &nbsp;|&nbsp; ${score.pass?'<span style="color:var(--success)">✓ 目前達標</span>':'<span style="color:var(--warning)">✗ 尚未達標</span>'}`;
+  } else {
+    // ACC/MCC: update rb classes for this code
+    const group=document.querySelector(`.rating-group[data-code="${code}"]`);
+    if(group){
+      group.querySelectorAll('.rb').forEach(btn=>{
+        btn.classList.remove('s0','s1','s2','s3');
+      });
+      const target=group.querySelector(`[data-val="${v}"]`);
+      if(target) target.classList.add('s'+v);
+    }
+  }
+}
+function updEv(code,v){if(!curSid||!curSKey)return;state.sessions[curSid][curSKey].evidence[code]=v;pushData();}
+function updFB(type,idx,field,val){
+  if(!curSid||!curSKey)return;
+  const s=state.sessions[curSid][curSKey];
+  if(type==='s'){s.strengthCompetencies[idx]=field==='c'?val:s.strengthCompetencies[idx];s.strengthComments[idx]=field==='t'?val:s.strengthComments[idx];}
+  else{s.devCompetencies[idx]=field==='c'?val:s.devCompetencies[idx];s.devComments[idx]=field==='t'?val:s.devComments[idx];}
+  pushData();
+}
+function saveDraft(){pushData();showToast('草稿已儲存');}
+function markDone(){
+  if(!curSid||!curSKey)return;
+  state.sessions[curSid][curSKey].done=true;
+  pushData();renderSessChips();showToast('場次已完成');renderDashboard();
+  exportSessionPDF();
+}
+
+// ══════════════════════════════════════════
+// COMPETENCY REVIEW
+// ══════════════════════════════════════════
+let curRevId=null;
+function onRevStudentChange(){
+  curRevId=document.getElementById('rev-sel').value;
+  if(!curRevId){document.getElementById('rev-form-area').innerHTML='<div class="empty-state"><div class="icon">📊</div><p>請選擇學員</p></div>';document.getElementById('rev-action-bar').style.display='none';return;}
+  renderRevForm();document.getElementById('rev-action-bar').style.display='flex';
+}
+
+function cumSkills(sid){
+  const student=state.students.find(s=>s.id===sid);
+  const lvl=student?.level||'ACC';
+  const sk=SKILLS[lvl];
+  const sessions=Object.values(state.sessions[sid]||{}).filter(s=>s.done);
+  const res={};
+  if(lvl==='PCC'){
+    COMP_KEYS.forEach(ck=>sk[ck].items.forEach(item=>{res[item.code]=sessions.some(s=>s.ratings[item.code]===true);}));
+  } else {
+    COMP_KEYS.forEach(ck=>sk[ck].items.forEach(item=>{res[item.code]=sessions.some(s=>(s.ratings[item.code]||0)>=2);}));
+  }
+  res.Q1=sessions.some(s=>s.qualifiers?.Q1===true);
+  res.Q2=sessions.some(s=>s.qualifiers?.Q2===true);
+  return res;
+}
+
+function renderRevForm(){
+  const student=state.students.find(s=>s.id===curRevId);
+  const lvl=student?.level||'ACC';
+  const sk=SKILLS[lvl];
+  const mentor=mentorObj(student.mentorId);
+  const done=doneSessions(curRevId);
+  const rev=state.reviews[curRevId]||{};
+  const cum=cumSkills(curRevId);
+
+  let html='';
+  if(done.length<3)html+=`<div class="alert alert-warn">⚠️ 目前完成 ${done.length} 場，ICF 要求至少 3 場。</div>`;
+
+  html+=`<div class="form-card"><h3>行政資訊 <span class="lvl lvl-${lvl}" style="margin-left:8px">${lvl}</span></h3><div class="form-grid">
+    <div class="form-group"><label>督導姓名</label><input type="text" value="${mentor.name}" disabled></div>
+    <div class="form-group"><label>督導 Email</label><input type="text" value="${mentor.email}" disabled></div>
+    <div class="form-group"><label>學員姓名</label><input type="text" value="${student.name}" disabled></div>
+    <div class="form-group"><label>學員 Email</label><input type="text" value="${student.email||''}" disabled></div>
+    <div class="form-group"><label>技能總評回饋日期</label><input type="date" value="${rev.meta?.reviewDate||''}" onchange="updRevMeta('reviewDate',this.value)"></div>
+    <div class="form-group"><label>個別督導總時數</label><input type="text" value="${rev.meta?.totalHours||''}" placeholder="e.g. 3.5" onchange="updRevMeta('totalHours',this.value)"></div>
+    <div class="form-group"><label>已完成觀察場次</label><input type="text" value="${done.length}" disabled></div>
+  </div></div>`;
+
+  // Session log
+  html+=`<div class="form-card"><h3>場次紀錄</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:11px">
+      <thead><tr><th style="background:var(--navy);color:white;padding:6px 9px">場次</th><th style="background:var(--navy);color:white;padding:6px 9px">日期</th><th style="background:var(--navy);color:white;padding:6px 9px">方式</th><th style="background:var(--navy);color:white;padding:6px 9px">時長</th><th style="background:var(--navy);color:white;padding:6px 9px">議題</th></tr></thead>
+      <tbody>${done.map((s,i)=>`<tr><td style="padding:5px 9px;border:1px solid var(--border)">Session ${i+1}</td><td style="padding:5px 9px;border:1px solid var(--border)">${s.meta?.sessionDate||'—'}</td><td style="padding:5px 9px;border:1px solid var(--border)">${s.meta?.modality||'—'}</td><td style="padding:5px 9px;border:1px solid var(--border)">${s.meta?.duration||'—'} min</td><td style="padding:5px 9px;border:1px solid var(--border)">${s.meta?.issue||'—'}</td></tr>`).join('')}</tbody>
+    </table>
+  </div>`;
+
+  // C1
+  html+=`<div class="form-card"><h3>Competency 1 · Demonstrates Ethical Practice</h3>
+    <div class="qual-row"><div class="qual-label">學員在整個督導歷程中展現對 ICF 道德規章的理解與一致性。</div>
+      <div class="toggle-group"><button class="toggle-btn ${rev.c1Yes===true?'yes-active':''}" onclick="setRevC1(true)">✓ Yes</button><button class="toggle-btn ${rev.c1Yes===false?'no-active':''}" onclick="setRevC1(false)">✗ No</button></div>
+    </div>
+    <div class="form-group" style="margin-top:10px"><label>備註</label><textarea onchange="updRevField('c1Notes',this.value)">${rev.c1Notes||''}</textarea></div>
+  </div>`;
+
+  // C3-C8
+  COMP_KEYS.forEach(ck=>{
+    const comp=sk[ck]; const cNum=ck.replace('C','');
+    const dc=comp.items.filter(item=>cum[item.code]).length;
+    const passed=dc>=comp.min;
+    html+=`<div class="comp-block">
+      <div class="comp-header ${passed?lvlColor(lvl):'fail'}">
+        <div><div class="comp-num">Competency ${cNum}</div><h4>${['','','Establishes and Maintains Agreements','Cultivates Trust and Safety','Maintains Presence','Listens Actively','Evokes Awareness','Facilitates Client Growth'][cNum]}</h4></div>
+        <span class="chip">${dc}/${comp.items.length} 達標 ${passed?'✓':'✗'}</span>
+      </div>
+      <div class="comp-body">
+        ${comp.items.map(item=>`<div class="skill-row" style="display:flex;justify-content:space-between;align-items:center">
+          <div><div class="skill-code">${item.code}</div><div class="skill-label" style="font-size:11px">${item.text}</div></div>
+          <span class="badge ${cum[item.code]?'badge-ready':'badge-pending'}">${cum[item.code]?'✓ 已展現':'未展現'}</span>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  });
+
+  // Cumulative feedback
+  const si=rev.strengthItems||[{},{},{}];
+  const di=rev.devItems||[{},{},{}];
+  html+=`<div class="form-card"><h3>累積回饋 Cumulative Feedback</h3>
+    <div style="margin-bottom:14px">
+      <label style="font-size:11px;font-weight:600;color:var(--success);display:block;margin-bottom:7px">▲ 優勢（2–3項）</label>
+      ${[0,1,2].map(i=>`<div style="display:grid;grid-template-columns:160px 1fr;gap:7px;margin-bottom:7px;align-items:start">
+        <select onchange="updRevFB('s',${i},'c',this.value)" style="font-size:11px"><option value="">— 選擇技能 —</option>${skillOpts(lvl,si[i]?.comp||'')}</select>
+        <textarea style="font-size:11px;padding:6px;border:1px solid var(--border);border-radius:3px;font-family:inherit;background:var(--cream);min-height:55px" onchange="updRevFB('s',${i},'t',this.value)">${si[i]?.comment||''}</textarea>
+      </div>`).join('')}
+    </div>
+    <div>
+      <label style="font-size:11px;font-weight:600;color:var(--warning);display:block;margin-bottom:7px">▼ 待發展（2–3項）</label>
+      ${[0,1,2].map(i=>`<div style="display:grid;grid-template-columns:160px 1fr;gap:7px;margin-bottom:7px;align-items:start">
+        <select onchange="updRevFB('d',${i},'c',this.value)" style="font-size:11px"><option value="">— 選擇技能 —</option>${skillOpts(lvl,di[i]?.comp||'')}</select>
+        <textarea style="font-size:11px;padding:6px;border:1px solid var(--border);border-radius:3px;font-family:inherit;background:var(--cream);min-height:55px" onchange="updRevFB('d',${i},'t',this.value)">${di[i]?.comment||''}</textarea>
+      </div>`).join('')}
+    </div>
+  </div>`;
+
+  // Attestation
+  html+=`<div class="form-card"><h3>簽核確認 Attestation</h3>
+    <div class="qual-row"><div class="qual-label"><strong>最終結論：</strong>學員已在每個能力領域達到 ${lvl} 等級的熟練度。</div>
+      <div class="toggle-group"><button class="toggle-btn ${rev.passed===true?'yes-active':''}" onclick="setRevPassed(true)">✓ 達標</button><button class="toggle-btn ${rev.passed===false?'no-active':''}" onclick="setRevPassed(false)">✗ 尚未達標</button></div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+      <div class="form-group" style="flex:1;min-width:180px"><label>督導電子簽名（全名）</label><input type="text" placeholder="${mentor.name}" value="${rev.signature||''}" onchange="updRevField('signature',this.value)"></div>
+      <div class="form-group"><label>簽名日期</label><input type="date" value="${rev.signDate||''}" onchange="updRevField('signDate',this.value)"></div>
+    </div>
+    <div style="margin-top:10px;font-size:13px;display:flex;flex-direction:column;gap:7px">
+      <label><input type="checkbox" ${rev.clientReviewed?'checked':''} onchange="updRevField('clientReviewed',this.checked)"> &nbsp;學員已查閱此表格，並已即時討論回饋。</label>
+      <label><input type="checkbox" ${rev.complete?'checked':''} onchange="setRevComplete(this.checked)"> &nbsp;<strong>標記為完成 Complete</strong></label>
+    </div>
+  </div>`;
+
+  document.getElementById('rev-form-area').innerHTML=html;
+}
+
+function updRevMeta(f,v){if(!curRevId)return;if(!state.reviews[curRevId].meta)state.reviews[curRevId].meta={};state.reviews[curRevId].meta[f]=v;pushData();}
+function updRevField(f,v){if(!curRevId)return;state.reviews[curRevId][f]=v;pushData();}
+function setRevC1(v){updRevField('c1Yes',v);renderRevForm();}
+function setRevPassed(v){updRevField('passed',v);renderRevForm();}
+function setRevComplete(v){updRevField('complete',v);pushData();renderDashboard();}
+function updRevFB(type,idx,field,val){
+  if(!curRevId)return;
+  const rev=state.reviews[curRevId];
+  if(type==='s'){if(!rev.strengthItems)rev.strengthItems=[{},{},{}];rev.strengthItems[idx]=rev.strengthItems[idx]||{};if(field==='c')rev.strengthItems[idx].comp=val;else rev.strengthItems[idx].comment=val;}
+  else{if(!rev.devItems)rev.devItems=[{},{},{}];rev.devItems[idx]=rev.devItems[idx]||{};if(field==='c')rev.devItems[idx].comp=val;else rev.devItems[idx].comment=val;}
+  pushData();
+}
+function saveReview(){pushData();showToast('總評已儲存');}
+
+// ══════════════════════════════════════════
+// PDF EXPORT
+// ══════════════════════════════════════════
+function exportSessionPDF(){
+  if(!curSid||!curSKey)return;
+  const student=state.students.find(s=>s.id===curSid);
+  const sess=state.sessions[curSid][curSKey];
+  const lvl=sess.level||student?.level||'ACC';
+  const sk=SKILLS[lvl];
+  const mentor=mentorObj(student.mentorId);
+  const keys=Object.keys(state.sessions[curSid]).sort();
+  const num=keys.indexOf(curSKey)+1;
+
+  let html=`<h1>ICF Mentor Coaching Session Observation Form – ${lvl}</h1>
+  <p class="pdf-meta">© International Coaching Federation &nbsp;|&nbsp; SAMPLE rev. 04.08.26</p>
+  <h2>Administrative Information</h2>
+  <table>
+    <tr><td width="42%"><strong>Mentor Coach:</strong></td><td>${mentor.name}</td></tr>
+    <tr><td><strong>Mentor Coach Email:</strong></td><td>${mentor.email}</td></tr>
+    <tr><td><strong>Client Name:</strong></td><td>${student.name}</td></tr>
+    <tr><td><strong>Client Email:</strong></td><td>${student.email||'—'}</td></tr>
+    <tr><td><strong>Level:</strong></td><td>${lvl}</td></tr>
+    <tr><td><strong>Session #:</strong></td><td>Session ${num}</td></tr>
+    <tr><td><strong>Date of Client's Coaching Session:</strong></td><td>${sess.meta?.sessionDate||'—'}</td></tr>
+    <tr><td><strong>Date of Mentor Coaching Session:</strong></td><td>${sess.meta?.mentorSessionDate||'—'}</td></tr>
+    <tr><td><strong>Modality:</strong></td><td>${sess.meta?.modality||'—'}</td></tr>
+    <tr><td><strong>Duration:</strong></td><td>${sess.meta?.duration||'—'} minutes</td></tr>
+    <tr><td><strong>Peer Client:</strong></td><td>${sess.meta?.peerClient||'—'}</td></tr>
+    <tr><td><strong>Issue / Topic:</strong></td><td>${sess.meta?.issue||'—'}</td></tr>
+  </table>
+  <h2>Competency 1: Demonstrates Ethical Practice</h2>
+  <table><tr><th>Qualifier</th><th>Description</th><th>Status</th></tr>
+    ${sk.C1.qualifiers.map(q=>`<tr><td>${q.code}</td><td>${q.text}</td><td>${sess.qualifiers[q.code]===true?'✓ Observed':sess.qualifiers[q.code]===false?'✗ Not Observed':'—'}</td></tr>`).join('')}
+  </table>`;
+
+  if(lvl==='PCC'){
+    const score=calcPCCScore(sess);
+    html+=`<p><strong>PCC Marker Score:</strong> Total ${score.total} / ${sk.pccTotalMin} required | C2 markers: ${score.c2} | ${score.pass?'PASS':'NOT YET'}</p>`;
+  }
+
+  COMP_KEYS.forEach(ck=>{
+    const comp=sk[ck]; const cNum=ck.replace('C','');
+    const compName=['','','Establishes and Maintains Agreements','Cultivates Trust and Safety','Maintains Presence','Listens Actively','Evokes Awareness','Facilitates Client Growth'][cNum];
+    html+=`<h2>Competency ${cNum}: ${compName}</h2>
+    <table><tr><th>Code</th><th>Behavioral Statement</th><th>${lvl==='PCC'?'Observed':'Rating'}</th><th>Evidence</th></tr>
+      ${comp.items.map(item=>{
+        const r=sess.ratings[item.code];
+        const rLabel=lvl==='PCC'?(r===true?'✓ Observed':r===false?'✗ Not Observed':'—'):(r!==undefined?RATING_LABELS[r]:'—');
+        return `<tr><td>${item.code}</td><td style="font-size:10px">${item.text}</td><td>${rLabel}</td><td style="font-size:10px">${sess.evidence[item.code]||'—'}</td></tr>`;
+      }).join('')}
+    </table>`;
+  });
+
+  html+=`<h2>Observation Feedback</h2>
+  <p><strong>Areas of Strength:</strong></p>
+  <table><tr><th>Competency</th><th>Feedback</th></tr>
+    ${[0,1,2].filter(i=>(sess.strengthCompetencies||[])[i]||(sess.strengthComments||[])[i]).map(i=>`<tr><td>${(sess.strengthCompetencies||[])[i]||'—'}</td><td>${(sess.strengthComments||[])[i]||'—'}</td></tr>`).join('')}
+  </table>
+  <p><strong>Areas for Development:</strong></p>
+  <table><tr><th>Competency</th><th>Feedback</th></tr>
+    ${[0,1,2].filter(i=>(sess.devCompetencies||[])[i]||(sess.devComments||[])[i]).map(i=>`<tr><td>${(sess.devCompetencies||[])[i]||'—'}</td><td>${(sess.devComments||[])[i]||'—'}</td></tr>`).join('')}
+  </table>
+  <h2>Mentor Coach Signature</h2>
+  <table><tr><td><strong>Printed Name:</strong></td><td>${mentor.name}</td></tr><tr><td><strong>Date Signed:</strong></td><td>${sess.meta?.mentorSessionDate||'—'}</td></tr></table>`;
+
+  showPDF(html,`${lvl}_Session_Obs_${student.name.replace(/ /g,'_')}_S${num}.pdf`);
+}
+
+function exportReviewPDF(){
+  if(!curRevId)return;
+  const student=state.students.find(s=>s.id===curRevId);
+  const lvl=student?.level||'ACC';
+  const sk=SKILLS[lvl];
+  const mentor=mentorObj(student.mentorId);
+  const rev=state.reviews[curRevId]||{};
+  const done=doneSessions(curRevId);
+  const cum=cumSkills(curRevId);
+
+  let html=`<h1>ICF Mentor Coaching Competency Review Form – ${lvl}</h1>
+  <p class="pdf-meta">© International Coaching Federation &nbsp;|&nbsp; SAMPLE rev. 04.08.26</p>
+  <h2>Administrative Information</h2>
+  <table>
+    <tr><td width="45%"><strong>Mentor Coach:</strong></td><td>${mentor.name}</td></tr>
+    <tr><td><strong>Mentor Coach Email:</strong></td><td>${mentor.email}</td></tr>
+    <tr><td><strong>Client Name:</strong></td><td>${student.name}</td></tr>
+    <tr><td><strong>Client Email:</strong></td><td>${student.email||'—'}</td></tr>
+    <tr><td><strong>Level:</strong></td><td>${lvl}</td></tr>
+    <tr><td><strong>Date of Competency Skills Review:</strong></td><td>${rev.meta?.reviewDate||'—'}</td></tr>
+    <tr><td><strong>Total Individual Hours:</strong></td><td>${rev.meta?.totalHours||'—'}</td></tr>
+    <tr><td><strong>Total Observed Sessions:</strong></td><td>${done.length}</td></tr>
+  </table>
+  <h2>Session Log</h2>
+  <table><tr><th>Session</th><th>Date</th><th>Modality</th><th>Duration</th><th>Issue</th></tr>
+    ${done.map((s,i)=>`<tr><td>Session ${i+1}</td><td>${s.meta?.sessionDate||'—'}</td><td>${s.meta?.modality||'—'}</td><td>${s.meta?.duration||'—'} min</td><td>${s.meta?.issue||'—'}</td></tr>`).join('')}
+  </table>
+  <h2>Competency 1: Demonstrates Ethical Practice</h2>
+  <p>Demonstrated: <strong>${rev.c1Yes===true?'☑ Yes':rev.c1Yes===false?'☑ No':'☐ Not indicated'}</strong></p>
+  ${rev.c1Notes?`<p>Notes: ${rev.c1Notes}</p>`:''}`;
+
+  COMP_KEYS.forEach(ck=>{
+    const comp=sk[ck]; const cNum=ck.replace('C','');
+    const compName=['','','Establishes and Maintains Agreements','Cultivates Trust and Safety','Maintains Presence','Listens Actively','Evokes Awareness','Facilitates Client Growth'][cNum];
+    const dc=comp.items.filter(item=>cum[item.code]).length;
+    html+=`<h2>Competency ${cNum}: ${compName}</h2>
+    <p>Proficiency in ≥${comp.min} of ${comp.items.length}: <strong>${dc>=comp.min?'☑ Yes':'☐ No'} (${dc}/${comp.items.length})</strong></p>
+    <table><tr><th>Code</th><th>Behavioral Statement</th><th>Status</th></tr>
+      ${comp.items.map(item=>`<tr><td>${item.code}</td><td style="font-size:10px">${item.text}</td><td>${cum[item.code]?'☑ Proficiency Demonstrated':'☐ Not Yet Demonstrated'}</td></tr>`).join('')}
+    </table>`;
+  });
+
+  html+=`<h2>Cumulative Feedback</h2>
+  <p><strong>Areas of Strength:</strong></p>
+  <table><tr><th>Competency</th><th>Feedback</th></tr>
+    ${(rev.strengthItems||[]).filter(x=>x?.comp||x?.comment).map(x=>`<tr><td>${x?.comp||'—'}</td><td>${x?.comment||'—'}</td></tr>`).join('')}
+  </table>
+  <p><strong>Areas for Development:</strong></p>
+  <table><tr><th>Competency</th><th>Feedback</th></tr>
+    ${(rev.devItems||[]).filter(x=>x?.comp||x?.comment).map(x=>`<tr><td>${x?.comp||'—'}</td><td>${x?.comment||'—'}</td></tr>`).join('')}
+  </table>
+  <h2>Signatures and Attestations</h2>
+  <p>Coach client demonstrated proficiency at ${lvl} level: <strong>${rev.passed===true?'☑ Yes':rev.passed===false?'☑ Not yet':'☐ Not indicated'}</strong></p>
+  <p>Client reviewed and discussed feedback: <strong>${rev.clientReviewed?'☑ Yes':'☐ No'}</strong></p>
+  <table><tr><td><strong>Mentor Coach Printed Name:</strong></td><td>${rev.signature||mentor.name}</td></tr><tr><td><strong>Date Signed:</strong></td><td>${rev.signDate||'—'}</td></tr></table>`;
+
+  showPDF(html,`${lvl}_Competency_Review_${student.name.replace(/ /g,'_')}.pdf`);
+}
+
+function showPDF(html,fn){
+  document.getElementById('pdf-content').innerHTML=html;
+  document.getElementById('pdf-dl-btn').onclick=()=>downloadPDF(fn);
+  openModal('modal-pdf');
+}
+function downloadPDF(fn){
+  const{jsPDF}=window.jspdf;const doc=new jsPDF({unit:'mm',format:'a4'});
+  const el=document.getElementById('pdf-content');
+  doc.html(el,{callback:d=>d.save(fn),x:8,y:8,width:194,windowWidth:el.offsetWidth});
+}
+
+// MODAL / TOAST
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function showToast(msg){const t=document.getElementById('toast');t.textContent='✓ '+msg;t.style.display='block';setTimeout(()=>t.style.display='none',2000);}
+</script>
+
+<!-- ══════════════════════════════════════════ LOGIN ══════════════════════════════════════════ -->
+<div id="login-screen" class="login-wrap">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-badge">ICF · ACC · PCC · MCC</div>
+      <div class="login-title">AICCP <span>MENTOR COACH</span></div>
+      <div class="login-sub">Mentor Coaching Management System</div>
+    </div>
+    <div class="lf">
+      <div><label>您的 Email</label><input type="email" id="login-email" placeholder="yourname@coaching.com.tw" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <div id="login-err" class="login-err"></div>
+      <button class="login-btn" onclick="doLogin()">進入系統</button>
+      <div class="config-notice" id="demo-notice">
+        ⚙️ <strong>示範模式</strong>｜資料存於本機瀏覽器<br>
+        輸入任意 Email 進入。部署後請更新 <code>GAS_URL</code>。<br>
+        <strong>已預設：</strong>Sandy Teng, MCC (sandy@coaching.com.tw) · 行政 Celeste (celeste@coaching.com.tw)
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ APP ══════════════════════════════════════════ -->
+<div id="app-screen" style="display:none">
+
+<header class="app-header">
+  <div class="header-inner">
+    <div class="logo">
+      <span class="logo-badge">ICF</span>
+      <span class="logo-title">AICCP <span>MENTOR COACH</span></span>
+    </div>
+    <nav class="nav-tabs">
+      <button class="nav-tab active" onclick="switchView('dashboard')">總覽</button>
+      <button class="nav-tab" onclick="switchView('observation')">觀察表單</button>
+      <button class="nav-tab" onclick="switchView('review')">技能總評</button>
+      <button class="nav-tab hidden nav-admin" id="tab-admin" onclick="switchView('admin')">行政管理</button>
+    </nav>
+    <div class="header-right">
+      <div class="user-chip">
+        <span id="hdr-email">—</span>
+        <span class="user-role role-mentor" id="hdr-role">督導</span>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">登出</button>
+    </div>
+  </div>
+</header>
+
+<!-- DASHBOARD -->
+<div id="view-dashboard" class="view active">
+  <div class="main">
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-label">學員總數</div><div class="stat-value" id="stat-students">0</div><div class="stat-sub">我負責的學員</div></div>
+      <div class="stat-card"><div class="stat-label">已完成場次</div><div class="stat-value" id="stat-sessions">0</div><div class="stat-sub">Session Observation Forms</div></div>
+      <div class="stat-card"><div class="stat-label">待完成總評</div><div class="stat-value" id="stat-pending" style="color:var(--gold)">0</div><div class="stat-sub">≥3場，等待 Competency Review</div></div>
+      <div class="stat-card"><div class="stat-label">等級分布</div><div class="stat-value" id="stat-levels" style="font-size:16px;margin-top:8px">—</div><div class="stat-sub">ACC / PCC / MCC</div></div>
+    </div>
+    <div class="section-title">
+      學員進度
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="text" id="dash-search" placeholder="搜尋…" style="width:180px;font-size:11px;padding:5px 9px" oninput="renderDashboard()">
+        <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-student')">＋ 新增學員</button>
+      </div>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>學員</th><th>等級</th><th>督導</th><th>場次</th><th>進度</th><th>狀態</th><th>操作</th></tr></thead>
+      <tbody id="dash-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- OBSERVATION -->
+<div id="view-observation" class="view">
+  <div class="main">
+    <div class="student-selector">
+      <label>選擇學員</label>
+      <select id="obs-sel" onchange="onObsStudentChange()" style="flex:1;max-width:260px"><option value="">— 請選擇 —</option></select>
+      <label style="margin-left:10px">場次</label>
+      <div class="session-chips" id="obs-chips"></div>
+      <button class="session-chip-add" onclick="addNewSession()">＋ 新場次</button>
+    </div>
+    <div id="obs-form-area"><div class="empty-state"><div class="icon">👆</div><p>請先選擇學員及場次</p></div></div>
+  </div>
+  <div class="action-bar" id="obs-action-bar" style="display:none">
+    <div class="action-bar-info" id="obs-action-info">Session Observation Form</div>
+    <div class="action-bar-btns">
+      <button class="btn btn-outline" onclick="saveDraft()">💾 儲存草稿</button>
+      <button class="btn btn-primary" onclick="markDone()">✓ 完成並匯出</button>
+      <button class="btn btn-gold" onclick="exportSessionPDF()">⬇ 匯出 PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEW -->
+<div id="view-review" class="view">
+  <div class="main">
+    <div class="student-selector">
+      <label>選擇學員</label>
+      <select id="rev-sel" onchange="onRevStudentChange()" style="flex:1;max-width:280px"><option value="">— 請選擇 —</option></select>
+    </div>
+    <div id="rev-form-area"><div class="empty-state"><div class="icon">📊</div><p>請選擇學員</p></div></div>
+  </div>
+  <div class="action-bar" id="rev-action-bar" style="display:none">
+    <div class="action-bar-info">Competency Review Form</div>
+    <div class="action-bar-btns">
+      <button class="btn btn-outline" onclick="saveReview()">💾 儲存</button>
+      <button class="btn btn-gold" onclick="exportReviewPDF()">⬇ 匯出 PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="view-admin" class="view">
+  <div class="main">
+    <div class="section-title">行政管理</div>
+    <div class="alert alert-info">只有行政帳號可新增 / 刪除學員和督導。</div>
+    <div class="section-title" style="font-size:16px">督導帳號</div>
+    <div class="form-card" style="padding:18px">
+      <div class="form-grid">
+        <div class="form-group"><label>督導姓名 *</label><input type="text" id="nm-name" placeholder="e.g. Amanda Fan, PCC"></div>
+        <div class="form-group"><label>督導 Email *</label><input type="email" id="nm-email" placeholder="amanda@coaching.com.tw"></div>
+        <div class="form-group"><label>督導等級</label>
+          <select id="nm-cred"><option value="ACC">ACC</option><option value="PCC">PCC</option></select>
+        </div>
+      </div>
+      <button class="btn btn-primary" style="margin-top:10px" onclick="addMentor()">新增督導</button>
+    </div>
+    <table class="data-table" style="margin-bottom:28px">
+      <thead><tr><th>督導姓名</th><th>Email</th><th>等級</th><th>學員數</th><th>操作</th></tr></thead>
+      <tbody id="mentors-tbody"></tbody>
+    </table>
+    <div class="section-title" style="font-size:16px">學員清單</div>
+    <table class="data-table">
+      <thead><tr><th>學員姓名</th><th>等級</th><th>督導</th><th>入學日期</th><th>操作</th></tr></thead>
+      <tbody id="admin-stu-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+</div><!-- end app-screen -->
+
+<!-- ADD STUDENT MODAL -->
+<div class="modal-overlay" id="modal-add-student">
+  <div class="modal">
+    <h3>新增學員</h3>
+    <div class="form-grid">
+      <div class="form-group"><label>學員姓名 *</label><input type="text" id="ns-name" placeholder="e.g. Jason Chen"></div>
+      <div class="form-group"><label>學員 Email</label><input type="email" id="ns-email" placeholder="jason@example.com"></div>
+      <div class="form-group"><label>指定督導 *</label><select id="ns-mentor"><option value="">— 選擇督導 —</option></select></div>
+      <div class="form-group"><label>學員等級 *</label>
+        <select id="ns-level">
+          <option value="ACC">ACC</option>
+          <option value="PCC">PCC</option>
+        </select>
+      </div>
+      <div class="form-group"><label>入學日期</label><input type="date" id="ns-date"></div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-outline" onclick="closeModal('modal-add-student')">取消</button>
+      <button class="btn btn-primary" onclick="addStudent()">建立</button>
+    </div>
+  </div>
+</div>
+
+<!-- PDF MODAL -->
+<div class="modal-overlay" id="modal-pdf" style="align-items:flex-start;padding:28px 14px;overflow-y:auto">
+  <div class="pdf-wrap">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <h3 style="font-family:'Crimson Pro',serif;font-size:18px;color:var(--navy)">PDF 預覽</h3>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-gold" id="pdf-dl-btn">⬇ 下載 PDF</button>
+        <button class="btn btn-outline" onclick="closeModal('modal-pdf')">關閉</button>
+      </div>
+    </div>
+    <div id="pdf-content" class="pdf-preview"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ 已儲存</div>
+
+<script>
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+</script>
+</body>
+</html>
