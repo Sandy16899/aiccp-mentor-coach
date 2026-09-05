@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AICCP MENTOR COACH</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Noto+Serif+TC:wght@300;400;600&display=swap');
 :root{
@@ -16,8 +15,6 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'DM Mono','Noto Serif TC',monospace;background:var(--cream);color:var(--text);min-height:100vh}
-
-/* LOGIN */
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--navy);position:relative;overflow:hidden}
 .login-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(200,151,58,.12),transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(45,95,163,.2),transparent 50%)}
 .login-card{background:white;border-radius:8px;padding:48px 40px;width:420px;box-shadow:var(--shadow-lg);position:relative;z-index:1}
@@ -34,8 +31,6 @@ body{font-family:'DM Mono','Noto Serif TC',monospace;background:var(--cream);col
 .login-btn:hover{background:var(--blue)}
 .login-err{background:#ffeaea;border:1px solid #f5a5a5;border-radius:3px;padding:10px 14px;font-size:12px;color:#c0392b;display:none}
 .config-notice{background:var(--cream);border:1px solid var(--border);border-radius:3px;padding:10px 14px;font-size:11px;color:var(--text-muted);margin-top:8px;line-height:1.6}
-
-/* HEADER */
 .app-header{background:var(--navy);position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.25)}
 .header-inner{max-width:1280px;margin:0 auto;padding:13px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
@@ -54,47 +49,31 @@ body{font-family:'DM Mono','Noto Serif TC',monospace;background:var(--cream);col
 .role-mentor{background:rgba(255,255,255,.2);color:white}
 .logout-btn{background:transparent;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.6);padding:6px 12px;border-radius:3px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;font-family:'DM Mono',monospace;transition:all .18s}
 .logout-btn:hover{border-color:rgba(255,255,255,.6);color:white}
-
-/* LEVEL BADGES */
 .lvl{display:inline-block;padding:2px 7px;border-radius:2px;font-size:10px;font-weight:600;letter-spacing:.05em}
 .lvl-ACC{background:#dbeafe;color:var(--acc)}
 .lvl-PCC{background:#f3e8ff;color:var(--pcc)}
 .lvl-MCC{background:#fff0e8;color:var(--mcc)}
-
-/* MAIN */
 .main{max-width:1280px;margin:0 auto;padding:24px 28px}
 .view{display:none}.view.active{display:block}
-
-/* STATS */
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
 .stat-card{background:white;border:1px solid var(--border);border-radius:4px;padding:20px;box-shadow:var(--shadow)}
 .stat-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px}
 .stat-value{font-family:'Crimson Pro',serif;font-size:36px;font-weight:300;color:var(--navy);line-height:1}
 .stat-sub{font-size:11px;color:var(--text-muted);margin-top:4px}
-
-/* SECTION */
 .section-title{font-family:'Crimson Pro',serif;font-size:20px;font-weight:400;color:var(--navy);margin-bottom:12px;padding-bottom:9px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px}
-
-/* TABLE */
 .data-table{width:100%;border-collapse:collapse;background:white;box-shadow:var(--shadow);border-radius:4px;overflow:hidden}
 .data-table th{background:var(--navy);color:rgba(255,255,255,.7);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:10px 13px;text-align:left;font-weight:400}
 .data-table td{padding:12px 13px;border-bottom:1px solid var(--cream-dark);font-size:13px;vertical-align:middle}
 .data-table tr:last-child td{border-bottom:none}
 .data-table tr:hover td{background:var(--cream)}
-
-/* PROGRESS */
 .prog-wrap{background:var(--cream-dark);border-radius:2px;height:5px;width:80px;display:inline-block;vertical-align:middle;margin-right:6px}
 .prog-fill{height:100%;border-radius:2px;background:var(--blue);transition:width .4s}
 .prog-fill.done{background:var(--success)}
-
-/* BADGES */
 .badge{display:inline-block;padding:2px 7px;border-radius:2px;font-size:10px;letter-spacing:.05em;text-transform:uppercase;font-weight:500}
 .badge-pending{background:#fff3e0;color:#b85a1a}
 .badge-progress{background:#e3f0ff;color:var(--blue)}
 .badge-ready{background:#e0f7ea;color:var(--success)}
 .badge-done{background:var(--navy);color:var(--gold-light)}
-
-/* BTNS */
 .btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:3px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;border:1px solid transparent;transition:all .18s}
 .btn-primary{background:var(--blue);color:white;border-color:var(--blue)}
 .btn-primary:hover{background:var(--navy);border-color:var(--navy)}
@@ -104,8 +83,6 @@ body{font-family:'DM Mono','Noto Serif TC',monospace;background:var(--cream);col
 .btn-outline:hover{border-color:var(--blue);color:var(--blue)}
 .btn-sm{padding:4px 9px;font-size:10px}
 .btn-danger{background:#c0392b;color:white;border-color:#c0392b}
-
-/* FORM */
 .form-card{background:white;border:1px solid var(--border);border-radius:4px;padding:24px;box-shadow:var(--shadow);margin-bottom:18px}
 .form-card h3{font-family:'Crimson Pro',serif;font-size:16px;font-weight:400;color:var(--navy);margin-bottom:16px;display:flex;align-items:center;gap:8px}
 .form-card h3::before{content:'';display:inline-block;width:3px;height:15px;background:var(--gold);border-radius:2px;flex-shrink:0}
@@ -116,8 +93,6 @@ label{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--t
 input[type="text"],input[type="email"],input[type="date"],select,textarea{border:1px solid var(--border);border-radius:3px;padding:8px 10px;font-family:'DM Mono',monospace;font-size:12px;color:var(--text);background:var(--cream);outline:none;width:100%;transition:border-color .18s}
 input:focus,select:focus,textarea:focus{border-color:var(--blue);background:white}
 textarea{resize:vertical;min-height:60px}
-
-/* COMPETENCY */
 .comp-block{border:1px solid var(--border);border-radius:4px;margin-bottom:12px;overflow:hidden}
 .comp-header{color:white;padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
 .comp-header.acc{background:var(--acc)}
@@ -131,8 +106,6 @@ textarea{resize:vertical;min-height:60px}
 .skill-row:last-child{border-bottom:none}
 .skill-code{font-size:10px;color:var(--gold);font-weight:500;margin-bottom:2px;letter-spacing:.05em}
 .skill-label{font-size:12px;line-height:1.5}
-
-/* RATING - ACC/MCC 4-level */
 .rating-group{display:flex;gap:3px}
 .rb{width:38px;height:38px;border:2px solid var(--border);border-bottom:3px solid rgba(0,0,0,.2);border-radius:5px;background:var(--cream);font-size:14px;font-weight:700;cursor:pointer;transition:all .1s;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-family:'DM Mono',monospace;user-select:none;position:relative}
 .rb:hover{border-color:var(--blue);color:var(--blue);background:white;transform:translateY(-2px);box-shadow:0 4px 8px rgba(45,95,163,.2)}
@@ -145,8 +118,6 @@ textarea{resize:vertical;min-height:60px}
 .rb.s1:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(200,140,30,.4)}
 .rb.s0{background:var(--warning);border-color:#7a2e08;border-bottom:3px solid #4a1c05;color:white;transform:none}
 .rb.s0:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(184,90,26,.4)}
-
-/* PCC Observed/Not toggle */
 .obs-group{display:flex;gap:5px}
 .obs-btn{padding:7px 13px;border:2px solid var(--border);border-bottom:3px solid rgba(0,0,0,.15);border-radius:5px;background:var(--cream);font-size:11px;font-weight:600;cursor:pointer;transition:all .1s;font-family:'DM Mono',monospace;white-space:nowrap;user-select:none}
 .obs-btn:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,.12)}
@@ -155,8 +126,6 @@ textarea{resize:vertical;min-height:60px}
 .obs-btn.obs-yes:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(45,122,79,.4)}
 .obs-btn.obs-no{background:var(--warning);border-color:#7a2e08;border-bottom:3px solid #4a1c05;color:white}
 .obs-btn.obs-no:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(184,90,26,.4)}
-
-/* QUALIFIER */
 .qual-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--cream-dark)}
 .qual-row:last-child{border-bottom:none}
 .qual-label{flex:1;font-size:12px}
@@ -164,8 +133,6 @@ textarea{resize:vertical;min-height:60px}
 .toggle-btn{padding:5px 10px;border:1px solid var(--border);border-radius:3px;background:var(--cream);font-size:10px;cursor:pointer;transition:all .15s;font-family:'DM Mono',monospace}
 .toggle-btn.yes-active{background:var(--success);border-color:var(--success);color:white}
 .toggle-btn.no-active{background:var(--warning);border-color:var(--warning);color:white}
-
-/* SESSION CHIPS */
 .student-selector{display:flex;align-items:center;gap:10px;background:white;border:1px solid var(--border);border-radius:4px;padding:12px 20px;margin-bottom:20px;box-shadow:var(--shadow);flex-wrap:wrap}
 .session-chips{display:flex;gap:6px;flex-wrap:wrap}
 .session-chip{padding:4px 12px;border:1px solid var(--border);border-radius:20px;font-size:11px;cursor:pointer;transition:all .15s;background:white}
@@ -173,30 +140,14 @@ textarea{resize:vertical;min-height:60px}
 .session-chip.done{color:var(--success);border-color:var(--success)}
 .session-chip-add{padding:4px 12px;border:1px dashed var(--border);border-radius:20px;font-size:11px;cursor:pointer;color:var(--blue);background:transparent;transition:all .15s}
 .session-chip-add:hover{background:var(--blue);color:white;border-color:var(--blue);border-style:solid}
-
-/* ACTION BAR */
 .action-bar{position:sticky;bottom:0;background:var(--navy);padding:12px 28px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 -4px 24px rgba(0,0,0,.2);z-index:50}
 .action-bar-info{color:rgba(255,255,255,.6);font-size:11px;letter-spacing:.05em}
 .action-bar-btns{display:flex;gap:8px}
-
-/* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(26,37,64,.7);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
 .modal-overlay.open{display:flex}
 .modal{background:white;border-radius:6px;padding:28px;max-width:500px;width:92%;box-shadow:var(--shadow-lg)}
 .modal h3{font-family:'Crimson Pro',serif;font-size:20px;margin-bottom:12px;color:var(--navy)}
 .modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
-
-/* PDF */
-.pdf-wrap{background:white;border-radius:6px;padding:20px;max-width:860px;width:100%;box-shadow:var(--shadow-lg)}
-.pdf-preview{font-family:'Times New Roman',serif;font-size:11px;line-height:1.6;color:#000;padding:16px}
-.pdf-preview h1{font-size:16px;text-align:center;margin-bottom:3px}
-.pdf-preview h2{font-size:13px;margin:14px 0 5px;border-bottom:1px solid #333;padding-bottom:2px}
-.pdf-preview .pdf-meta{text-align:center;font-size:10px;color:#555;margin-bottom:14px}
-.pdf-preview table{width:100%;border-collapse:collapse;margin:6px 0;font-size:10px}
-.pdf-preview th{background:#1a2540;color:white;padding:4px 8px;text-align:left}
-.pdf-preview td{padding:4px 8px;border:1px solid #ccc}
-
-/* MISC */
 .empty-state{text-align:center;padding:50px 20px;color:var(--text-muted)}
 .empty-state .icon{font-size:40px;margin-bottom:12px}
 .alert{padding:10px 13px;border-radius:3px;font-size:11px;margin-bottom:12px;border-left:3px solid;line-height:1.6}
@@ -211,34 +162,22 @@ textarea{resize:vertical;min-height:60px}
 <body>
 
 <script>
-// ══════════════════════════════════════════
-// CONFIGURATION
-// ══════════════════════════════════════════
 const GAS_URL = "https://script.google.com/macros/s/AKfycbwqBQO31UZY_3JjFxAQFmRyvbZZAEXFarKP5d9nM1emmFvrrrMtC6PBssqSJTZ-S3_z/exec";
+
 const ADMIN_EMAILS = [
   "celeste@coaching.com.tw",
   "sandy@coaching.com.tw"
 ];
 
-// Pre-seeded staff (will be merged into state on first load)
 const SEED_MENTORS = [
   { id:"M_SANDY", name:"Sandy Teng, MCC", email:"sandy@coaching.com.tw", credential:"MCC" }
 ];
-const SEED_ADMIN = [
-  { name:"Celeste", email:"celeste@coaching.com.tw" }
-];
 
-const IS_DEMO = GAS_URL === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+const IS_DEMO = false;
 
-// ══════════════════════════════════════════
-// SKILLS DATA — ALL THREE LEVELS
-// ══════════════════════════════════════════
 const SKILLS = {
   ACC:{
-    label:"ACC",
-    color:"acc",
-    ratingMode:"4level",   // ✗ △ ✓ ★
-    passScore:2,           // rating >= 2 counts
+    label:"ACC",color:"acc",ratingMode:"4level",passScore:2,
     C1:{ qualifiers:[
       {code:"Q1",text:"Coach demonstrates alignment with the ICF Code of Ethics."},
       {code:"Q2",text:"Coach is in consistent alignment with the role of a coach."}
@@ -276,15 +215,10 @@ const SKILLS = {
       {code:"A8.3",text:"Coach supports the client to close the session."}
     ]}
   },
-
   PCC:{
-    label:"PCC",
-    color:"pcc",
-    ratingMode:"observed",  // Observed / Not Observed
-    // PCC pass rule: total markers ≥23 AND each domain minimum
+    label:"PCC",color:"pcc",ratingMode:"observed",
     pccDomainMin:{C3:2,C4:2,C5:2,C6:3,C7:4,C8:3},
     pccTotalMin:23,
-    // C2 markers (double-counted): 4.1,4.3,4.4,5.1,5.2,5.3,5.4,6.1,6.5,7.1,7.5
     pccC2markers:["4.1","4.3","4.4","5.1","5.2","5.3","5.4","6.1","6.5","7.1","7.5"],
     C1:{ qualifiers:[
       {code:"Q1",text:"Coach demonstrates alignment with the ICF Code of Ethics."},
@@ -340,12 +274,8 @@ const SKILLS = {
       {code:"8.9",text:"Coach partners with the client on how they want to complete this session."}
     ]}
   },
-
   MCC:{
-    label:"MCC",
-    color:"mcc",
-    ratingMode:"4level",
-    passScore:2,
+    label:"MCC",color:"mcc",ratingMode:"4level",passScore:2,
     C1:{ qualifiers:[
       {code:"Q1",text:"Coach demonstrates alignment with the ICF Code of Ethics."},
       {code:"Q2",text:"Coach is in consistent alignment with the role of a coach."}
@@ -389,10 +319,8 @@ const SKILLS = {
 const COMP_KEYS=["C3","C4","C5","C6","C7","C8"];
 const RATING_LABELS=["不符標準","低於標準","符合標準","超越標準"];
 const RATING_SHORT=["✗","△","✓","★"];
+const COMP_NAMES=["","","Establishes and Maintains Agreements","Cultivates Trust and Safety","Maintains Presence","Listens Actively","Evokes Awareness","Facilitates Client Growth"];
 
-// ══════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════
 let currentUser=null;
 let state={mentors:[],students:[],sessions:{},reviews:{}};
 
@@ -400,7 +328,6 @@ function saveLocal(){localStorage.setItem('aiccp_v2',JSON.stringify(state));}
 function loadLocal(){
   const raw=localStorage.getItem('aiccp_v2');
   if(raw){try{state=JSON.parse(raw);}catch(e){}}
-  // Seed Sandy if not present
   if(!state.mentors.find(m=>m.email==='sandy@coaching.com.tw')){
     state.mentors.push({id:'M_SANDY',name:'Sandy Teng, MCC',email:'sandy@coaching.com.tw',credential:'MCC'});
     saveLocal();
@@ -409,33 +336,29 @@ function loadLocal(){
 loadLocal();
 
 async function apiCall(action,payload={}){
-  if(IS_DEMO)return{ok:true};
   try{
     const res=await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,...payload})});
     return await res.json();
   }catch(e){return{ok:false,error:e.message};}
 }
 async function loadRemote(){
-  if(IS_DEMO)return;
   const res=await apiCall('getAll');
   if(res.ok&&res.data){state=res.data;saveLocal();}
 }
 async function pushData(){
   saveLocal();
-  if(!IS_DEMO)await apiCall('saveAll',{data:state});
+  await apiCall('saveAll',{data:state});
 }
 
-// ══════════════════════════════════════════
-// AUTH
-// ══════════════════════════════════════════
+// ══════ AUTH ══════
 async function doLogin(){
   const email=document.getElementById('login-email').value.trim().toLowerCase();
   if(!email||!email.includes('@')){showErr('請輸入有效的 Email');return;}
   document.getElementById('login-err').style.display='none';
-  if(!IS_DEMO)await loadRemote();
+  await loadRemote();
   const isAdmin=ADMIN_EMAILS.map(e=>e.toLowerCase()).includes(email);
   const isMentor=state.mentors.some(m=>m.email.toLowerCase()===email);
-  if(!IS_DEMO&&!isAdmin&&!isMentor){showErr('此 Email 未登記，請聯繫行政。');return;}
+  if(!isAdmin&&!isMentor){showErr('此 Email 未登記，請聯繫行政。');return;}
   const mentor=state.mentors.find(m=>m.email.toLowerCase()===email);
   currentUser={email,isAdmin,mentorId:mentor?.id,mentorName:mentor?.name};
   document.getElementById('login-screen').style.display='none';
@@ -445,15 +368,13 @@ async function doLogin(){
   roleEl.textContent=isAdmin?'行政':'督導';
   roleEl.className='user-role '+(isAdmin?'role-admin':'role-mentor');
   if(isAdmin)document.getElementById('tab-admin').classList.remove('hidden');
-
-  // 只有 Sandy (MCC) 才能看到 MCC 等級選項
-  const isSandy = email === 'sandy@coaching.com.tw';
+  const isSandy=email==='sandy@coaching.com.tw';
   if(isSandy){
     ['ns-level','nm-cred'].forEach(id=>{
       const sel=document.getElementById(id);
-      if(sel && !sel.querySelector('option[value="MCC"]')){
+      if(sel&&!sel.querySelector('option[value="MCC"]')){
         const opt=document.createElement('option');
-        opt.value='MCC'; opt.textContent='MCC';
+        opt.value='MCC';opt.textContent='MCC';
         sel.appendChild(opt);
       }
     });
@@ -461,15 +382,9 @@ async function doLogin(){
   populateSelects();renderDashboard();
 }
 function showErr(msg){const e=document.getElementById('login-err');e.textContent=msg;e.style.display='block';}
-function doLogout(){
-  currentUser=null;
-  document.getElementById('app-screen').style.display='none';
-  document.getElementById('login-screen').style.display='flex';
-}
+function doLogout(){currentUser=null;document.getElementById('app-screen').style.display='none';document.getElementById('login-screen').style.display='flex';}
 
-// ══════════════════════════════════════════
-// NAVIGATION
-// ══════════════════════════════════════════
+// ══════ NAV ══════
 function switchView(v){
   document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(el=>el.classList.remove('active'));
@@ -482,9 +397,7 @@ function switchView(v){
   if(v==='admin')renderAdmin();
 }
 
-// ══════════════════════════════════════════
-// HELPERS
-// ══════════════════════════════════════════
+// ══════ HELPERS ══════
 function myStudents(){
   if(!currentUser)return[];
   if(currentUser.isAdmin)return state.students;
@@ -495,9 +408,6 @@ function mentorObj(id){return state.mentors.find(m=>m.id===id)||{name:'',email:'
 function doneSessions(sid){return Object.values(state.sessions[sid]||{}).filter(s=>s.done);}
 function lvlColor(lvl){return lvl==='ACC'?'acc':lvl==='PCC'?'pcc':'mcc';}
 
-// ══════════════════════════════════════════
-// POPULATE SELECTS
-// ══════════════════════════════════════════
 function populateSelects(){
   const students=myStudents();
   ['obs-sel','rev-sel'].forEach(id=>{
@@ -513,9 +423,7 @@ function populateSelects(){
     state.mentors.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');
 }
 
-// ══════════════════════════════════════════
-// DASHBOARD
-// ══════════════════════════════════════════
+// ══════ DASHBOARD ══════
 function renderDashboard(){
   if(!currentUser)return;
   const students=myStudents();
@@ -533,10 +441,9 @@ function renderDashboard(){
   const pccCount=students.filter(s=>s.level==='PCC').length;
   const mccCount=students.filter(s=>s.level==='MCC').length;
   document.getElementById('stat-levels').innerHTML=`<span class="lvl lvl-ACC">${accCount} ACC</span> <span class="lvl lvl-PCC">${pccCount} PCC</span> <span class="lvl lvl-MCC">${mccCount} MCC</span>`;
-
   const tbody=document.getElementById('dash-tbody');
   const filtered=students.filter(s=>!q||s.name.toLowerCase().includes(q)||mentorName(s.mentorId).toLowerCase().includes(q)||s.level.toLowerCase().includes(q));
-  if(!filtered.length){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text-muted)">找不到符合的學員</td></tr>';return;}
+  if(!filtered.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text-muted)">找不到符合的學員</td></tr>';return;}
   tbody.innerHTML=filtered.map(s=>{
     const done=doneSessions(s.id).length;
     const pct=Math.min(100,Math.round((done/3)*100));
@@ -562,16 +469,13 @@ function renderDashboard(){
 function goObs(id){switchView('observation');document.getElementById('obs-sel').value=id;onObsStudentChange();}
 function goRev(id){switchView('review');document.getElementById('rev-sel').value=id;onRevStudentChange();}
 
-// ══════════════════════════════════════════
-// ADMIN
-// ══════════════════════════════════════════
+// ══════ ADMIN ══════
 function renderAdmin(){
   const mtbody=document.getElementById('mentors-tbody');
   mtbody.innerHTML=state.mentors.length?state.mentors.map(m=>{
     const cnt=state.students.filter(s=>s.mentorId===m.id).length;
     return `<tr><td><strong>${m.name}</strong></td><td>${m.email}</td><td><span class="lvl lvl-${m.credential||'ACC'}">${m.credential||'—'}</span></td><td>${cnt}</td><td><button class="btn btn-danger btn-sm" onclick="delMentor('${m.id}')">刪除</button></td></tr>`;
   }).join(''):'<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-muted)">尚無督導</td></tr>';
-
   const stbody=document.getElementById('admin-stu-tbody');
   stbody.innerHTML=state.students.length?state.students.map(s=>`<tr>
     <td><strong>${s.name}</strong></td>
@@ -608,9 +512,7 @@ function addStudent(){
 }
 function delStudent(id){if(!confirm('確定刪除此學員？'))return;state.students=state.students.filter(s=>s.id!==id);delete state.sessions[id];delete state.reviews[id];pushData();renderAdmin();renderDashboard();}
 
-// ══════════════════════════════════════════
-// OBSERVATION FORM
-// ══════════════════════════════════════════
+// ══════ OBSERVATION ══════
 let curSid=null,curSKey=null;
 
 function onObsStudentChange(){
@@ -655,7 +557,7 @@ function renderObsForm(){
   const num=keys.indexOf(curSKey)+1;
   document.getElementById('obs-action-info').textContent=`${student.name} · [${lvl}] Session ${num}`;
 
-  let html=``;
+  let html='';
   if(lvl==='PCC'){
     const score=calcPCCScore(sess);
     html+=`<div class="pcc-score-bar">PCC Markers 即時統計 &nbsp;|&nbsp; 總計：<strong>${score.total}</strong> / 需 ${sk.pccTotalMin} &nbsp;|&nbsp; C2 相關：${score.c2} &nbsp;|&nbsp;
@@ -686,7 +588,6 @@ function renderObsForm(){
     <div class="form-group"><label>會談議題</label><input type="text" value="${sess.meta.issue||''}" placeholder="e.g. 如何做一個更好的決定" onchange="updMeta('issue',this.value)"></div>
   </div></div>`;
 
-  // C1
   html+=`<div class="comp-block">
     <div class="comp-header ${lvlColor(lvl)}"><div><div class="comp-num">Competency 1</div><h4>Demonstrates Ethical Practice</h4></div></div>
     <div class="comp-body">
@@ -703,12 +604,11 @@ function renderObsForm(){
     </div>
   </div>`;
 
-  // C3–C8
   COMP_KEYS.forEach(ck=>{
-    const comp=sk[ck]; const cNum=ck.replace('C','');
+    const comp=sk[ck];const cNum=ck.replace('C','');
     html+=`<div class="comp-block">
       <div class="comp-header ${lvlColor(lvl)}">
-        <div><div class="comp-num">Competency ${cNum}</div><h4>${['','','Establishes and Maintains Agreements','Cultivates Trust and Safety','Maintains Presence','Listens Actively','Evokes Awareness','Facilitates Client Growth'][cNum]}</h4></div>
+        <div><div class="comp-num">Competency ${cNum}</div><h4>${COMP_NAMES[cNum]}</h4></div>
         <span class="chip">至少 ${comp.min} 項達標</span>
       </div>
       <div class="comp-body">
@@ -744,7 +644,6 @@ function renderObsForm(){
     </div>`;
   });
 
-  // Feedback
   html+=`<div class="form-card"><h3>觀察回饋</h3>
     <div style="margin-bottom:16px">
       <label style="font-size:11px;font-weight:600;color:var(--success);display:block;margin-bottom:8px">▲ 優勢 Areas of Strength</label>
@@ -776,9 +675,7 @@ function skillOpts(lvl,selected){
     C7:'Competency 7 – Evokes Awareness',
     C8:'Competency 8 – Facilitates Client Growth'
   };
-  return COMP_KEYS.map(ck=>
-    `<option value="${ck}" ${selected===ck?'selected':''}>${compNames[ck]}</option>`
-  ).join('');
+  return COMP_KEYS.map(ck=>`<option value="${ck}" ${selected===ck?'selected':''}>${compNames[ck]}</option>`).join('');
 }
 
 function calcPCCScore(sess){
@@ -789,9 +686,7 @@ function calcPCCScore(sess){
     sk[ck].items.forEach(item=>{
       if(sess.ratings[item.code]===true){
         cnt++;
-        // check if C2 marker
-        const bareCode=item.code.toString();
-        if(sk.pccC2markers.includes(bareCode)){score.c2++;}
+        if(sk.pccC2markers.includes(item.code.toString())){score.c2++;}
         else{score.total++;}
       }
     });
@@ -808,36 +703,26 @@ function setRating(code,v){
   if(!curSid||!curSKey)return;
   state.sessions[curSid][curSKey].ratings[code]=v;
   pushData();
-
   const student=state.students.find(s=>s.id===curSid);
   const sess=state.sessions[curSid][curSKey];
   const lvl=sess.level||student?.level||'ACC';
-
   if(lvl==='PCC'){
-    // PCC: update obs-btn classes for this code
     const group=document.querySelector(`.obs-group[data-code="${code}"]`);
     if(group){
-      group.querySelectorAll('.obs-btn').forEach(btn=>{
-        btn.classList.remove('obs-yes','obs-no');
-      });
-      if(v===true) group.querySelector('[data-val="true"]')?.classList.add('obs-yes');
-      if(v===false) group.querySelector('[data-val="false"]')?.classList.add('obs-no');
+      group.querySelectorAll('.obs-btn').forEach(btn=>btn.classList.remove('obs-yes','obs-no'));
+      if(v===true)group.querySelector('[data-val="true"]')?.classList.add('obs-yes');
+      if(v===false)group.querySelector('[data-val="false"]')?.classList.add('obs-no');
     }
-    // Update PCC score bar
     const score=calcPCCScore(sess);
     const bar=document.querySelector('.pcc-score-bar');
     if(bar)bar.innerHTML=`PCC Markers 即時統計 &nbsp;|&nbsp; 總計：<strong>${score.total}</strong> / 需 ${SKILLS.PCC.pccTotalMin} &nbsp;|&nbsp; C2 相關：${score.c2} &nbsp;|&nbsp;
     ${COMP_KEYS.map(ck=>`${ck}:${score[ck]||0}/${SKILLS.PCC[ck].min}`).join(' &nbsp; ')}
     &nbsp;|&nbsp; ${score.pass?'<span style="color:var(--success)">✓ 目前達標</span>':'<span style="color:var(--warning)">✗ 尚未達標</span>'}`;
   } else {
-    // ACC/MCC: update rb classes for this code
     const group=document.querySelector(`.rating-group[data-code="${code}"]`);
     if(group){
-      group.querySelectorAll('.rb').forEach(btn=>{
-        btn.classList.remove('s0','s1','s2','s3');
-      });
-      const target=group.querySelector(`[data-val="${v}"]`);
-      if(target) target.classList.add('s'+v);
+      group.querySelectorAll('.rb').forEach(btn=>btn.classList.remove('s0','s1','s2','s3'));
+      group.querySelector(`[data-val="${v}"]`)?.classList.add('s'+v);
     }
   }
 }
@@ -854,12 +739,10 @@ function markDone(){
   if(!curSid||!curSKey)return;
   state.sessions[curSid][curSKey].done=true;
   pushData();renderSessChips();showToast('場次已完成');renderDashboard();
-  exportSessionPDF();
+  printSessionPDF();
 }
 
-// ══════════════════════════════════════════
-// COMPETENCY REVIEW
-// ══════════════════════════════════════════
+// ══════ REVIEW ══════
 let curRevId=null;
 function onRevStudentChange(){
   curRevId=document.getElementById('rev-sel').value;
@@ -905,7 +788,6 @@ function renderRevForm(){
     <div class="form-group"><label>已完成觀察場次</label><input type="text" value="${done.length}" disabled></div>
   </div></div>`;
 
-  // Session log
   html+=`<div class="form-card"><h3>場次紀錄</h3>
     <table style="width:100%;border-collapse:collapse;font-size:11px">
       <thead><tr><th style="background:var(--navy);color:white;padding:6px 9px">場次</th><th style="background:var(--navy);color:white;padding:6px 9px">日期</th><th style="background:var(--navy);color:white;padding:6px 9px">方式</th><th style="background:var(--navy);color:white;padding:6px 9px">時長</th><th style="background:var(--navy);color:white;padding:6px 9px">議題</th></tr></thead>
@@ -913,7 +795,6 @@ function renderRevForm(){
     </table>
   </div>`;
 
-  // C1
   html+=`<div class="form-card"><h3>Competency 1 · Demonstrates Ethical Practice</h3>
     <div class="qual-row"><div class="qual-label">學員在整個督導歷程中展現對 ICF 道德規章的理解與一致性。</div>
       <div class="toggle-group"><button class="toggle-btn ${rev.c1Yes===true?'yes-active':''}" onclick="setRevC1(true)">✓ Yes</button><button class="toggle-btn ${rev.c1Yes===false?'no-active':''}" onclick="setRevC1(false)">✗ No</button></div>
@@ -921,14 +802,13 @@ function renderRevForm(){
     <div class="form-group" style="margin-top:10px"><label>備註</label><textarea onchange="updRevField('c1Notes',this.value)">${rev.c1Notes||''}</textarea></div>
   </div>`;
 
-  // C3-C8
   COMP_KEYS.forEach(ck=>{
-    const comp=sk[ck]; const cNum=ck.replace('C','');
+    const comp=sk[ck];const cNum=ck.replace('C','');
     const dc=comp.items.filter(item=>cum[item.code]).length;
     const passed=dc>=comp.min;
     html+=`<div class="comp-block">
       <div class="comp-header ${passed?lvlColor(lvl):'fail'}">
-        <div><div class="comp-num">Competency ${cNum}</div><h4>${['','','Establishes and Maintains Agreements','Cultivates Trust and Safety','Maintains Presence','Listens Actively','Evokes Awareness','Facilitates Client Growth'][cNum]}</h4></div>
+        <div><div class="comp-num">Competency ${cNum}</div><h4>${COMP_NAMES[cNum]}</h4></div>
         <span class="chip">${dc}/${comp.items.length} 達標 ${passed?'✓':'✗'}</span>
       </div>
       <div class="comp-body">
@@ -940,7 +820,6 @@ function renderRevForm(){
     </div>`;
   });
 
-  // Cumulative feedback
   const si=rev.strengthItems||[{},{},{}];
   const di=rev.devItems||[{},{},{}];
   html+=`<div class="form-card"><h3>累積回饋 Cumulative Feedback</h3>
@@ -960,7 +839,6 @@ function renderRevForm(){
     </div>
   </div>`;
 
-  // Attestation
   html+=`<div class="form-card"><h3>簽核確認 Attestation</h3>
     <div class="qual-row"><div class="qual-label"><strong>最終結論：</strong>學員已在每個能力領域達到 ${lvl} 等級的熟練度。</div>
       <div class="toggle-group"><button class="toggle-btn ${rev.passed===true?'yes-active':''}" onclick="setRevPassed(true)">✓ 達標</button><button class="toggle-btn ${rev.passed===false?'no-active':''}" onclick="setRevPassed(false)">✗ 尚未達標</button></div>
@@ -992,21 +870,18 @@ function updRevFB(type,idx,field,val){
 }
 function saveReview(){pushData();showToast('總評已儲存');}
 
-// ══════════════════════════════════════════
-// PDF EXPORT
-// ══════════════════════════════════════════
-function exportSessionPDF(){
-  if(!curSid||!curSKey)return;
-  const student=state.students.find(s=>s.id===curSid);
-  const sess=state.sessions[curSid][curSKey];
+// ══════ PDF (瀏覽器列印) ══════
+function buildSessionHTML(sid, sKey){
+  const student=state.students.find(s=>s.id===sid);
+  const sess=state.sessions[sid][sKey];
   const lvl=sess.level||student?.level||'ACC';
   const sk=SKILLS[lvl];
   const mentor=mentorObj(student.mentorId);
-  const keys=Object.keys(state.sessions[curSid]).sort();
-  const num=keys.indexOf(curSKey)+1;
+  const keys=Object.keys(state.sessions[sid]).sort();
+  const num=keys.indexOf(sKey)+1;
 
   let html=`<h1>ICF Mentor Coaching Session Observation Form – ${lvl}</h1>
-  <p class="pdf-meta">© International Coaching Federation &nbsp;|&nbsp; SAMPLE rev. 04.08.26</p>
+  <p class="pdf-meta">AICCP Mentor Coach System &nbsp;|&nbsp; ${new Date().toLocaleDateString('zh-TW')}</p>
   <h2>Administrative Information</h2>
   <table>
     <tr><td width="42%"><strong>Mentor Coach:</strong></td><td>${mentor.name}</td></tr>
@@ -1033,9 +908,8 @@ function exportSessionPDF(){
   }
 
   COMP_KEYS.forEach(ck=>{
-    const comp=sk[ck]; const cNum=ck.replace('C','');
-    const compName=['','','Establishes and Maintains Agreements','Cultivates Trust and Safety','Maintains Presence','Listens Actively','Evokes Awareness','Facilitates Client Growth'][cNum];
-    html+=`<h2>Competency ${cNum}: ${compName}</h2>
+    const comp=sk[ck];const cNum=ck.replace('C','');
+    html+=`<h2>Competency ${cNum}: ${COMP_NAMES[cNum]}</h2>
     <table><tr><th>Code</th><th>Behavioral Statement</th><th>${lvl==='PCC'?'Observed':'Rating'}</th><th>Evidence</th></tr>
       ${comp.items.map(item=>{
         const r=sess.ratings[item.code];
@@ -1057,21 +931,20 @@ function exportSessionPDF(){
   <h2>Mentor Coach Signature</h2>
   <table><tr><td><strong>Printed Name:</strong></td><td>${mentor.name}</td></tr><tr><td><strong>Date Signed:</strong></td><td>${sess.meta?.mentorSessionDate||'—'}</td></tr></table>`;
 
-  showPDF(html,`${lvl}_Session_Obs_${student.name.replace(/ /g,'_')}_S${num}.pdf`);
+  return html;
 }
 
-function exportReviewPDF(){
-  if(!curRevId)return;
-  const student=state.students.find(s=>s.id===curRevId);
+function buildReviewHTML(revId){
+  const student=state.students.find(s=>s.id===revId);
   const lvl=student?.level||'ACC';
   const sk=SKILLS[lvl];
   const mentor=mentorObj(student.mentorId);
-  const rev=state.reviews[curRevId]||{};
-  const done=doneSessions(curRevId);
-  const cum=cumSkills(curRevId);
+  const rev=state.reviews[revId]||{};
+  const done=doneSessions(revId);
+  const cum=cumSkills(revId);
 
   let html=`<h1>ICF Mentor Coaching Competency Review Form – ${lvl}</h1>
-  <p class="pdf-meta">© International Coaching Federation &nbsp;|&nbsp; SAMPLE rev. 04.08.26</p>
+  <p class="pdf-meta">AICCP Mentor Coach System &nbsp;|&nbsp; ${new Date().toLocaleDateString('zh-TW')}</p>
   <h2>Administrative Information</h2>
   <table>
     <tr><td width="45%"><strong>Mentor Coach:</strong></td><td>${mentor.name}</td></tr>
@@ -1092,10 +965,9 @@ function exportReviewPDF(){
   ${rev.c1Notes?`<p>Notes: ${rev.c1Notes}</p>`:''}`;
 
   COMP_KEYS.forEach(ck=>{
-    const comp=sk[ck]; const cNum=ck.replace('C','');
-    const compName=['','','Establishes and Maintains Agreements','Cultivates Trust and Safety','Maintains Presence','Listens Actively','Evokes Awareness','Facilitates Client Growth'][cNum];
+    const comp=sk[ck];const cNum=ck.replace('C','');
     const dc=comp.items.filter(item=>cum[item.code]).length;
-    html+=`<h2>Competency ${cNum}: ${compName}</h2>
+    html+=`<h2>Competency ${cNum}: ${COMP_NAMES[cNum]}</h2>
     <p>Proficiency in ≥${comp.min} of ${comp.items.length}: <strong>${dc>=comp.min?'☑ Yes':'☐ No'} (${dc}/${comp.items.length})</strong></p>
     <table><tr><th>Code</th><th>Behavioral Statement</th><th>Status</th></tr>
       ${comp.items.map(item=>`<tr><td>${item.code}</td><td style="font-size:10px">${item.text}</td><td>${cum[item.code]?'☑ Proficiency Demonstrated':'☐ Not Yet Demonstrated'}</td></tr>`).join('')}
@@ -1116,27 +988,88 @@ function exportReviewPDF(){
   <p>Client reviewed and discussed feedback: <strong>${rev.clientReviewed?'☑ Yes':'☐ No'}</strong></p>
   <table><tr><td><strong>Mentor Coach Printed Name:</strong></td><td>${rev.signature||mentor.name}</td></tr><tr><td><strong>Date Signed:</strong></td><td>${rev.signDate||'—'}</td></tr></table>`;
 
-  showPDF(html,`${lvl}_Competency_Review_${student.name.replace(/ /g,'_')}.pdf`);
+  return html;
 }
 
-function showPDF(html,fn){
-  document.getElementById('pdf-content').innerHTML=html;
-  document.getElementById('pdf-dl-btn').onclick=()=>downloadPDF(fn);
-  openModal('modal-pdf');
-}
-function downloadPDF(fn){
-  const{jsPDF}=window.jspdf;const doc=new jsPDF({unit:'mm',format:'a4'});
-  const el=document.getElementById('pdf-content');
-  doc.html(el,{callback:d=>d.save(fn),x:8,y:8,width:194,windowWidth:el.offsetWidth});
+const PDF_STYLE=`
+  body{font-family:'Times New Roman',serif;font-size:11px;line-height:1.6;color:#000;padding:20px}
+  h1{font-size:16px;text-align:center;margin-bottom:3px}
+  h2{font-size:13px;margin:14px 0 5px;border-bottom:1px solid #333;padding-bottom:2px}
+  .pdf-meta{text-align:center;font-size:10px;color:#555;margin-bottom:14px}
+  table{width:100%;border-collapse:collapse;margin:6px 0;font-size:10px}
+  th{background:#1a2540;color:white;padding:4px 8px;text-align:left}
+  td{padding:4px 8px;border:1px solid #ccc}
+  @media print{body{padding:0}}
+`;
+
+function openPrintWindow(html, title){
+  const win=window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title><style>${PDF_STYLE}</style></head><body>${html}<script>window.onload=function(){window.print();}<\/script></body></html>`);
+  win.document.close();
 }
 
-// MODAL / TOAST
+function printSessionPDF(){
+  if(!curSid||!curSKey)return;
+  const student=state.students.find(s=>s.id===curSid);
+  const sess=state.sessions[curSid][curSKey];
+  const keys=Object.keys(state.sessions[curSid]).sort();
+  const num=keys.indexOf(curSKey)+1;
+  const html=buildSessionHTML(curSid,curSKey);
+  const mentor=mentorObj(student.mentorId);
+  openPrintWindow(html,`Session_Obs_${student.name}_S${num}`);
+  // 同時寄信給督導
+  sendSessionEmail(student, sess, mentor, num, html);
+}
+
+function printReviewPDF(){
+  if(!curRevId)return;
+  const student=state.students.find(s=>s.id===curRevId);
+  const html=buildReviewHTML(curRevId);
+  const mentor=mentorObj(student.mentorId);
+  openPrintWindow(html,`Competency_Review_${student.name}`);
+  // 同時寄信給督導
+  sendReviewEmail(student, mentor, html);
+}
+
+async function sendSessionEmail(student, sess, mentor, num, htmlContent){
+  if(!mentor.email)return;
+  const subject=`[AICCP] Session Observation – ${student.name} Session ${num}`;
+  const emailHtml=`
+    <p>親愛的 ${mentor.name}，</p>
+    <p>以下是您針對學員 <strong>${student.name}</strong> 第 ${num} 場觀察表單的副本，請留存。</p>
+    <hr>
+    ${htmlContent}
+    <hr>
+    <p style="font-size:11px;color:#888">此信由 AICCP Mentor Coach System 自動寄出。</p>
+  `;
+  const res=await apiCall('sendEmail',{to:mentor.email,subject,html:emailHtml});
+  if(res.ok){showToast('已寄送副本給督導');}
+  else{console.error('Email 寄送失敗:',res.error);}
+}
+
+async function sendReviewEmail(student, mentor, htmlContent){
+  if(!mentor.email)return;
+  const subject=`[AICCP] Competency Review – ${student.name}`;
+  const emailHtml=`
+    <p>親愛的 ${mentor.name}，</p>
+    <p>以下是您針對學員 <strong>${student.name}</strong> 的技能總評表單副本，請留存。</p>
+    <hr>
+    ${htmlContent}
+    <hr>
+    <p style="font-size:11px;color:#888">此信由 AICCP Mentor Coach System 自動寄出。</p>
+  `;
+  const res=await apiCall('sendEmail',{to:mentor.email,subject,html:emailHtml});
+  if(res.ok){showToast('已寄送副本給督導');}
+  else{console.error('Email 寄送失敗:',res.error);}
+}
+
+// ══════ MODAL / TOAST ══════
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
-function showToast(msg){const t=document.getElementById('toast');t.textContent='✓ '+msg;t.style.display='block';setTimeout(()=>t.style.display='none',2000);}
+function showToast(msg){const t=document.getElementById('toast');t.textContent='✓ '+msg;t.style.display='block';setTimeout(()=>t.style.display='none',2500);}
 </script>
 
-<!-- ══════════════════════════════════════════ LOGIN ══════════════════════════════════════════ -->
+<!-- LOGIN -->
 <div id="login-screen" class="login-wrap">
   <div class="login-card">
     <div class="login-logo">
@@ -1148,16 +1081,13 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent='
       <div><label>您的 Email</label><input type="email" id="login-email" placeholder="yourname@coaching.com.tw" onkeydown="if(event.key==='Enter')doLogin()"></div>
       <div id="login-err" class="login-err"></div>
       <button class="login-btn" onclick="doLogin()">進入系統</button>
-      <div class="config-notice" id="demo-notice">
-        請輸入您的 Email 登入。如尚未登記，請聯繫行政人員。
-      </div>
+      <div class="config-notice">請輸入您的 Email 登入。如尚未登記，請聯繫行政人員。</div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════ APP ══════════════════════════════════════════ -->
+<!-- APP -->
 <div id="app-screen" style="display:none">
-
 <header class="app-header">
   <div class="header-inner">
     <div class="logo">
@@ -1168,7 +1098,7 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent='
       <button class="nav-tab active" onclick="switchView('dashboard')">總覽</button>
       <button class="nav-tab" onclick="switchView('observation')">觀察表單</button>
       <button class="nav-tab" onclick="switchView('review')">技能總評</button>
-      <button class="nav-tab hidden nav-admin" id="tab-admin" onclick="switchView('admin')">行政管理</button>
+      <button class="nav-tab hidden" id="tab-admin" onclick="switchView('admin')">行政管理</button>
     </nav>
     <div class="header-right">
       <div class="user-chip">
@@ -1219,8 +1149,8 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent='
     <div class="action-bar-info" id="obs-action-info">Session Observation Form</div>
     <div class="action-bar-btns">
       <button class="btn btn-outline" onclick="saveDraft()">💾 儲存草稿</button>
-      <button class="btn btn-primary" onclick="markDone()">✓ 完成並匯出</button>
-      <button class="btn btn-gold" onclick="exportSessionPDF()">⬇ 匯出 PDF</button>
+      <button class="btn btn-primary" onclick="markDone()">✓ 完成並列印</button>
+      <button class="btn btn-gold" onclick="printSessionPDF()">🖨 列印 / PDF</button>
     </div>
   </div>
 </div>
@@ -1238,7 +1168,7 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent='
     <div class="action-bar-info">Competency Review Form</div>
     <div class="action-bar-btns">
       <button class="btn btn-outline" onclick="saveReview()">💾 儲存</button>
-      <button class="btn btn-gold" onclick="exportReviewPDF()">⬇ 匯出 PDF</button>
+      <button class="btn btn-gold" onclick="printReviewPDF()">🖨 列印 / PDF</button>
     </div>
   </div>
 </div>
@@ -1282,10 +1212,7 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent='
       <div class="form-group"><label>學員 Email</label><input type="email" id="ns-email" placeholder="jason@example.com"></div>
       <div class="form-group"><label>指定督導 *</label><select id="ns-mentor"><option value="">— 選擇督導 —</option></select></div>
       <div class="form-group"><label>學員等級 *</label>
-        <select id="ns-level">
-          <option value="ACC">ACC</option>
-          <option value="PCC">PCC</option>
-        </select>
+        <select id="ns-level"><option value="ACC">ACC</option><option value="PCC">PCC</option></select>
       </div>
       <div class="form-group"><label>入學日期</label><input type="date" id="ns-date"></div>
     </div>
@@ -1293,20 +1220,6 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent='
       <button class="btn btn-outline" onclick="closeModal('modal-add-student')">取消</button>
       <button class="btn btn-primary" onclick="addStudent()">建立</button>
     </div>
-  </div>
-</div>
-
-<!-- PDF MODAL -->
-<div class="modal-overlay" id="modal-pdf" style="align-items:flex-start;padding:28px 14px;overflow-y:auto">
-  <div class="pdf-wrap">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-      <h3 style="font-family:'Crimson Pro',serif;font-size:18px;color:var(--navy)">PDF 預覽</h3>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-gold" id="pdf-dl-btn">⬇ 下載 PDF</button>
-        <button class="btn btn-outline" onclick="closeModal('modal-pdf')">關閉</button>
-      </div>
-    </div>
-    <div id="pdf-content" class="pdf-preview"></div>
   </div>
 </div>
 
